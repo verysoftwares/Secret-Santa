@@ -139,21 +139,8 @@ function advance_timer()
     timer=maxtimer 
   end
 
-  if giftshotx then
-    if t%6==0 then giftshotx=giftshotx+giftshotdx; 
-    if giftshotx>#lanes[giftshoty] then giftshotx=1--giftshotx=nil; giftshoty=nil
-    elseif giftshotx<1 then giftshotx=#lanes[giftshoty] end
-    if lanes[giftshoty][giftshotx]~=83 and lanes[giftshoty][giftshotx]~=0 then lanes[giftshoty][giftshotx]=83; giftshotx=nil; giftshoty=nil 
-    elseif lanes[giftshoty][giftshotx]==83 or lanes[giftshoty][giftshotx]==0 then 
-      local rng=math.random(1,10)
-      local item=0
-      if rng>=7 then item=88
-      elseif rng>=4 then item=89
-      elseif rng>=2 then item=87
-      else item=86 end
-      lanes[giftshoty][giftshotx]=item
-    end
-    end
+  if giftshotx and t%6==0 then
+    gift_advance()
   end
 
   if timer<8 then hilightx=nil; hilighty=nil end
@@ -212,6 +199,22 @@ function elf_advance()
       
       end
     end
+  end
+end
+
+function gift_advance()
+  giftshotx=giftshotx+giftshotdx; 
+  if giftshotx>#lanes[giftshoty] then giftshotx=1--giftshotx=nil; giftshoty=nil
+  elseif giftshotx<1 then giftshotx=#lanes[giftshoty] end
+  if lanes[giftshoty][giftshotx]~=83 and lanes[giftshoty][giftshotx]~=0 then lanes[giftshoty][giftshotx]=83; giftshotx=nil; giftshoty=nil 
+  elseif lanes[giftshoty][giftshotx]==83 or lanes[giftshoty][giftshotx]==0 then 
+    local rng=math.random(1,10)
+    local item=0
+    if rng>=7 then item=88
+    elseif rng>=4 then item=89
+    elseif rng>=2 then item=87
+    else item=86 end
+    lanes[giftshoty][giftshotx]=item
   end
 end
 
