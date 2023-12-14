@@ -25,6 +25,9 @@ function music2()
   if (tt<18*8*4 and tt%18==0) or (tt>=18*8*4 and tt%12==0) then
     sfx(1,12*4-tt//6%12+tt//2%16-tt//3%9,20,0)
   end
+  --if tt%24==0 then
+    --sfx(1,12*3-tt//6%12+tt//2%16-tt//3%9,20,1)
+  --end
   if tt==18*8*9+18*2-1 then tt=-1 end
   tt=tt+1
 end
@@ -39,7 +42,7 @@ for i=1,4 do
   for j=0,240/i-1,8 do
     local sp=83
     if math.random()<0.15 then sp=86
-    elseif math.random()<0.15 then sp=81 end
+    elseif math.random()<0.15 then sp=81-math.random(0,1)*16 end
     table.insert(lanes[i],sp)
   end
 end
@@ -66,11 +69,11 @@ end
 function santa_input()
   if btnp(0) and santay>1 and pack[89]>0 then
     local prevx=santax 
-    santax=math.min(math.max(math.floor(santax*(santay/(santay-1))+0.5*santadx+(-1+1-timer/maxtimer)*santadx),1),#lanes[santay-1]); 
+    santax=parallax_shift(-1,santax,santay,santadx)
     santay=santay-1; 
     timer=maxtimer; hilightx=nil; hilighty=nil 
     local step=lanes[santay][santax]
-    if step==81 or step==86 then
+    if step==81 or step==86 or step==81-16 then
       hilightx=santax; hilighty=santay
       santax=prevx; santay=santay+1
     elseif step>=87 and step<=89 then
@@ -84,11 +87,11 @@ function santa_input()
   end
   if btnp(1) and santay<4 and pack[89]>0 then 
     local prevx=santax
-    santax=math.min(math.max(math.floor(santax*(santay/(santay+1))+0.5+(-0.5+1-timer/maxtimer)*santadx),1),#lanes[santay+1]); 
-    santay=santay+1; 
+    santax=parallax_shift(1,santax,santay,santadx); 
+    santay=santay+1;
     timer=maxtimer; hilightx=nil; hilighty=nil 
     local step=lanes[santay][santax]
-    if step==81 or step==86 then
+    if step==81 or step==86 or step==81-16 then
       hilightx=santax; hilighty=santay
       santax=prevx; santay=santay-1
     elseif step>=87 and step<=89 then
@@ -116,25 +119,23 @@ function santa_input()
   end
 end
 
+function parallax_shift(dir,sx,sy,sdx)
+  -- returns the x position
+  -- on the new parallax lane
+  if dir==1 then
+  return math.min(math.max(math.floor(sx*(sy/(sy+1))+0.5+(-0.5+1-timer/maxtimer)*sdx),1),#lanes[sy+1])
+  end
+  if dir==-1 then
+  return math.min(math.max(math.floor(sx*(sy/(sy-1))+0.5*sdx+(-1+1-timer/maxtimer)*sdx),1),#lanes[sy-1])
+  end
+end
+
 function advance_timer()
   timer=timer-1
 
-  if timer==0 then local prevx=santax; santax=santax+santadx; local border=false
-    if santax>=240/8/santay+1 then santax=1; border=true end
-    if santax<1 then santax=#lanes[santay]; border=true end
-    local step=lanes[santay][santax]
-    if step==86 then 
-      if not gift and pack[88]>0 then gift=1; lanes[santay][santax]=83; santax=prevx; sub_pack(88)
-      else hilightx=santax; hilighty=santay; santax=prevx end
-    elseif step==81 then
-      hilightx=santax; hilighty=santay
-      santax=prevx
-    elseif step>=87 and step<=89 then
-      pack[step]=pack[step]+1
-      --if step==88 then pack[step]=pack[step]+1 end
-      lanes[santay][santax]=83
-    end
-    if border and santax~=prevx then if gift then gift=gift-1; if gift<=0 then gift=nil end end end
+  if timer==0 then 
+    santa_advance()
+    elf_advance()
     timer=maxtimer 
   end
 
@@ -158,6 +159,62 @@ function advance_timer()
   if timer<8 then hilightx=nil; hilighty=nil end
 end
 
+function santa_advance()
+  local prevx=santax; santax=santax+santadx; local border=false
+  if santax>=240/8/santay+1 then santax=1; border=true end
+  if santax<1 then santax=#lanes[santay]; border=true end
+  local step=lanes[santay][santax]
+  if step==86 then 
+    if not gift and pack[88]>0 then gift=1; lanes[santay][santax]=83; santax=prevx; sub_pack(88)
+    else hilightx=santax; hilighty=santay; santax=prevx end
+  elseif step==81 or step==81-16 then
+    hilightx=santax; hilighty=santay
+    santax=prevx
+  elseif step>=87 and step<=89 then
+    pack[step]=pack[step]+1
+    --if step==88 then pack[step]=pack[step]+1 end
+    lanes[santay][santax]=83
+  end
+  if border and santax~=prevx then if gift then gift=gift-1; if gift<=0 then gift=nil end end end
+end
+
+function elf_advance()
+  local old_lanes={{},{},{},{}}
+  for i=1,4 do
+    for j,v in ipairs(lanes[i]) do
+      if i==santay and j==santax then old_lanes[i][j]=97 
+      else old_lanes[i][j]=v end
+    end
+  end
+  -- old_lanes is now read-only
+  for i=1,4 do
+    for j=#lanes[i],1,-1 do
+      local v=old_lanes[i][j]
+      local coll,colli
+      if v==81 then
+        if j-1<1 then
+        colli=#old_lanes[i]
+        else 
+        colli=j-1
+        end
+        coll=old_lanes[i][colli] 
+      elseif v==81-16 then 
+        if j+1>#old_lanes[i] then
+        colli=1
+        else
+        colli=j+1 
+        end
+        coll=old_lanes[i][colli]
+      end
+      if coll==83 and lanes[i][colli]==83 then
+        lanes[i][j]=83; lanes[i][colli]=v
+      else
+      
+      end
+    end
+  end
+end
+
 labels={}
 function sub_pack(i)
   pack[i]=pack[i]-1
@@ -179,11 +236,11 @@ function render_background()
       local flip=0
       local sp=v
       -- preview back tile
-      if i==santay-1 and j==math.min(math.max(math.floor(santax*(santay/(santay-1))+0.5*santadx+(-1+1-timer/maxtimer)*santadx),1),#lanes[santay-1]) then
+      if i==santay-1 and j==parallax_shift(-1,santax,santay,santadx) then
         --rect((j-1)*(8*i)+offx,ly,i*8,i*8,4)
       end
       -- preview front tile
-      if i==santay+1 and j==math.min(math.max(math.floor(santax*(santay/(santay+1))+0.5+(-0.5+1-timer/maxtimer)*santadx),1),#lanes[santay+1]) then
+      if i==santay+1 and j==parallax_shift(1,santax,santay,santadx) then
         --rect((j-1)*(8*i)+offx,ly,i*8,i*8,5)
       end
       if santay==i and j==santax then 
@@ -244,9 +301,6 @@ function render_foreground()
 end
 
 function SCN(i)
-  --poke(0x3FC0+11*3,0x73)
-  --poke(0x3FC0+11*3+1,0xFA)
-  --poke(0x3FC0+11*3+2,0xF7)
   poke(0x3FC0+11*3,0xA4+(i*8+t)%64)
   poke(0x3FC0+11*3+1,0x24+(i*12+t)%164)
   poke(0x3FC0+11*3+2,0x24+(i*6+t)%64)
@@ -275,6 +329,8 @@ end
 -- 018:ccca00ccaaaa0ccecaaa0ceeaaaa0ceeaaaa0cee8888ccee000cceeecccceeee
 -- 019:cacccccccaaaaaaacaaacaaacaaaaccccaaaaaaac8888888cc000cccecccccec
 -- 020:ccca00ccaaaa0ccecaaa0ceeaaaa0ceeaaaa0cee8888ccee000cceeecccceeee
+-- 065:566666600666644406666a4a0066644405566655055666650556666500066660
+-- 066:566666600556644405566a4a0556644400566655000666650006666500066660
 -- 070:000000000660066006c66c6006666660ccc66ccdccc66ccdccc66ccdddd77ddd
 -- 071:000000000990099009c99c9009999990ccc99ccdccc99ccdccc99ccdddd88ddd
 -- 081:0666666544466660a4a666604446660055666550566665505666655006666000
