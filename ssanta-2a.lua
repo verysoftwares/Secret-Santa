@@ -63,7 +63,9 @@ function TIC()
   render_background()
   render_foreground()
 
+  --if not elf_cor then
   t=t+1
+  --end
 end
 
 function santa_input()
@@ -133,10 +135,14 @@ end
 function advance_timer()
   timer=timer-1
 
-  if timer==0 then 
-    santa_advance()
-    elf_advance()
+  if timer<=0 then
+    if timer==0 then elf_cor=elf_advance() end
+    timer=0
+    if t%8==0 and not coroutine.resume(elf_cor) then
     timer=maxtimer 
+    santa_advance()
+    elf_cor=nil
+    end
   end
 
   if giftshotx and t%6==0 then
@@ -166,6 +172,7 @@ function santa_advance()
 end
 
 function elf_advance()
+  return coroutine.create(function()
   local old_lanes={{},{},{},{}}
   for i=1,4 do
     for j,v in ipairs(lanes[i]) do
@@ -177,29 +184,44 @@ function elf_advance()
   for i=1,4 do
     for j=#lanes[i],1,-1 do
       local v=old_lanes[i][j]
+      if v==81 or v==81-16 then
       local coll,colli
+      local dx
       if v==81 then
-        if j-1<1 then
+      		dx=-1
+        if j+dx<1 then
         colli=#old_lanes[i]
         else 
-        colli=j-1
+        colli=j+dx
         end
         coll=old_lanes[i][colli] 
       elseif v==81-16 then 
-        if j+1>#old_lanes[i] then
+        dx=1
+        if j+dx>#old_lanes[i] then
         colli=1
         else
-        colli=j+1 
+        colli=j+dx 
         end
         coll=old_lanes[i][colli]
       end
       if coll==83 and lanes[i][colli]==83 then
         lanes[i][j]=83; lanes[i][colli]=v
+        coroutine.yield()
       else
-      
+        local px
+        if i>1 then
+        px=parallax_shift(-1,j,i,dx)
+        if old_lanes[i-1][px]==83 and lanes[i-1][px]==83 then lanes[i][j]=83; lanes[i-1][px]=v; coroutine.yield() end
+        end
+        --[[if i<4 and lanes[i][j]==v then
+        px=parallax_shift(1,j,i,dx)
+        if old_lanes[i+1][px]==83 and lanes[i+1][px]==83  then lanes[i][j]=83; lanes[i+1][px]=v; coroutine.yield() end
+        end]]
+      end
       end
     end
   end
+  end)
 end
 
 function gift_advance()
