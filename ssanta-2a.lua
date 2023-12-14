@@ -5,32 +5,23 @@
 -- license: MIT
 -- script:  lua
 
+SP_ELFL=81
+SP_ELFR=81-16
+SP_SANTA=97
+SP_SANTAGIFT=97+16
+SP_EMPTY=83
+SP_GIFT=86
+SP_SOCK=87
+SP_CANE=88
+SP_TREE=89
+SP_CLOUD=84
+
 t=0
 x=96
 y=24
 santax=1
 santay=4
 santadx=1
-
-function music1()
-  if t%49%24==7 and t%6~=0 then
-    sfx(1,12*4+t//6%12-t//2%16,20,0)
-  end
-  if t%49==7 then
-    sfx(1,12*3+t//6%12-t//2%16,60,1)
-  end
-end
-function music2()
-  tt=tt or 0
-  if (tt<18*8*4 and tt%18==0) or (tt>=18*8*4 and tt%12==0) then
-    sfx(1,12*4-tt//6%12+tt//2%16-tt//3%9,20,0)
-  end
-  --if tt%24==0 then
-    --sfx(1,12*3-tt//6%12+tt//2%16-tt//3%9,20,1)
-  --end
-  if tt==18*8*9+18*2-1 then tt=-1 end
-  tt=tt+1
-end
 
 lanes={
   {},
@@ -40,9 +31,9 @@ lanes={
 }
 for i=1,4 do
   for j=0,240/i-1,8 do
-    local sp=83
-    if math.random()<0.15 then sp=86
-    elseif math.random()<0.15 then sp=81-math.random(0,1)*16 end
+    local sp=SP_EMPTY
+    if math.random()<0.15 then sp=SP_GIFT
+    elseif math.random()<0.15 then sp=SP_ELFL-math.random(0,1)*16 end
     table.insert(lanes[i],sp)
   end
 end
@@ -69,55 +60,55 @@ function TIC()
 end
 
 function santa_input()
-  if btnp(0) and santay>1 and pack[89]>0 then
+  if btnp(0) and santay>1 and pack[SP_TREE]>0 then
     local prevx=santax 
     santax=parallax_shift(-1,santax,santay,santadx)
     santay=santay-1; 
     timer=maxtimer; hilightx=nil; hilighty=nil 
     local step=lanes[santay][santax]
-    if step==81 or step==86 or step==81-16 then
+    if step==SP_ELFL or step==SP_ELFL or step==SP_GIFT then
       hilightx=santax; hilighty=santay
       santax=prevx; santay=santay+1
-    elseif step>=87 and step<=89 then
+    elseif step>=SP_SOCK and step<=SP_TREE then
       pack[step]=pack[step]+1
       --if step==88 then pack[step]=pack[step]+1 end
-      lanes[santay][santax]=83
-      sub_pack(89)
+      lanes[santay][santax]=SP_EMPTY
+      sub_pack(SP_TREE)
     else
-      sub_pack(89)
+      sub_pack(SP_TREE)
     end
   end
-  if btnp(1) and santay<4 and pack[89]>0 then 
+  if btnp(1) and santay<4 and pack[SP_TREE]>0 then 
     local prevx=santax
     santax=parallax_shift(1,santax,santay,santadx); 
     santay=santay+1;
     timer=maxtimer; hilightx=nil; hilighty=nil 
     local step=lanes[santay][santax]
-    if step==81 or step==86 or step==81-16 then
+    if step==SP_ELFL or step==SP_ELFR or step==SP_GIFT then
       hilightx=santax; hilighty=santay
       santax=prevx; santay=santay-1
-    elseif step>=87 and step<=89 then
+    elseif step>=SP_SOCK and step<=SP_TREE then
       pack[step]=pack[step]+1
       --if step==88 then pack[step]=pack[step]+1 end
-      lanes[santay][santax]=83
-      sub_pack(89)
+      lanes[santay][santax]=SP_EMPTY
+      sub_pack(SP_TREE)
     else
-      sub_pack(89)
+      sub_pack(SP_TREE)
     end
   end
   -- throw with Z
-  if btnp(4) and gift and pack[88]>0 then
+  if btnp(4) and gift and pack[SP_CANE]>0 then
     giftshotx=santax; giftshoty=santay; giftshotdx=santadx
     gift=gift-1
     if gift<=0 then gift=nil end
     timer=maxtimer
-    sub_pack(88)
+    sub_pack(SP_CANE)
   end
   -- turn with X or arrows
-  if (btnp(5) or (santadx>0 and btnp(2)) or (santadx<0 and btnp(3))) and pack[87]>0 then
+  if (btnp(5) or (santadx>0 and btnp(2)) or (santadx<0 and btnp(3))) and pack[SP_SOCK]>0 then
     santadx=-santadx
     timer=maxtimer
-    sub_pack(87)
+    sub_pack(SP_SOCK)
   end
 end
 
@@ -162,16 +153,16 @@ function santa_advance()
   if santax>=240/8/santay+1 then santax=1; border=true end
   if santax<1 then santax=#lanes[santay]; border=true end
   local step=lanes[santay][santax]
-  if step==86 then 
-    if not gift and pack[88]>0 then gift=1; lanes[santay][santax]=83; santax=prevx; sub_pack(88)
+  if step==SP_GIFT then 
+    if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=83; santax=prevx; sub_pack(88)
     else hilightx=santax; hilighty=santay; santax=prevx end
-  elseif step==81 or step==81-16 then
+  elseif step==SP_ELFL or step==SP_ELFR then
     hilightx=santax; hilighty=santay
     santax=prevx
-  elseif step>=87 and step<=89 then
+  elseif step>=SP_SOCK and step<=SP_TREE then
     pack[step]=pack[step]+1
     --if step==88 then pack[step]=pack[step]+1 end
-    lanes[santay][santax]=83
+    lanes[santay][santax]=SP_EMPTY
   end
   if border and santax~=prevx then if gift then gift=gift-1; if gift<=0 then gift=nil end end end
 end
@@ -189,10 +180,10 @@ function elf_advance()
   for i=1,4 do
     for j=#lanes[i],1,-1 do
       local v=old_lanes[i][j]
-      if v==81 or v==81-16 then
+      if v==SP_ELFL or v==SP_ELFR then
       local coll,colli
       local dx
-      if v==81 then
+      if v==SP_ELFL then
       		dx=-1
         if j+dx<1 then
         colli=#old_lanes[i]
@@ -200,7 +191,7 @@ function elf_advance()
         colli=j+dx
         end
         coll=old_lanes[i][colli] 
-      elseif v==81-16 then 
+      elseif v==SP_ELFR then 
         dx=1
         if j+dx>#old_lanes[i] then
         colli=1
@@ -209,14 +200,14 @@ function elf_advance()
         end
         coll=old_lanes[i][colli]
       end
-      if coll==83 and lanes[i][colli]==83 then
-        lanes[i][j]=83; lanes[i][colli]=v
+      if coll==SP_EMPTY and lanes[i][colli]==SP_EMPTY then
+        lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
         coroutine.yield()
       else
         local px
         if i>1 then
         px=parallax_shift(-1,j,i,dx)
-        if old_lanes[i-1][px]==83 and lanes[i-1][px]==83 then lanes[i][j]=83; lanes[i-1][px]=v; coroutine.yield() end
+        if old_lanes[i-1][px]==SP_EMPTY and lanes[i-1][px]==SP_EMPTY then lanes[i][j]=83; lanes[i-1][px]=v; coroutine.yield() end
         end
         --[[if i<4 and lanes[i][j]==v then
         px=parallax_shift(1,j,i,dx)
@@ -234,12 +225,12 @@ function gift_advance()
   if giftshotx>#lanes[giftshoty] then giftshotx=1--giftshotx=nil; giftshoty=nil
   elseif giftshotx<1 then giftshotx=#lanes[giftshoty] end
   local step=lanes[giftshoty][giftshotx]
-  if step~=83 and step~=0 then 
-    if (step~=81 and step~=81-16) or ((step==81 and giftshotdx>0) or (step==81-16 and giftshotdx<0)) then
-      lanes[giftshoty][giftshotx]=83; 
+  if step~=SP_EMPTY then 
+    if (step~=SP_ELFL and step~=SP_ELFR) or ((step==SP_ELFL and giftshotdx>0) or (step==SP_ELFR and giftshotdx<0)) then
+      lanes[giftshoty][giftshotx]=SP_EMPTY; 
     end
     giftshotx=nil; giftshoty=nil; giftshotdx=nil
-  elseif step==83 or step==0 then 
+  elseif step==SP_EMPTY then 
     local rng=math.random(1,10)
     local item=0
     if rng>=7 then item=88
@@ -279,16 +270,16 @@ function render_background()
         --rect((j-1)*(8*i)+offx,ly,i*8,i*8,5)
       end
       if santay==i and j==santax then 
-        if v==86 and not gift then lanes[i][j]=83; gift=1 end
-        sp=97 
+        if v==SP_GIFT and not gift then lanes[i][j]=SP_EMPTY; gift=1 end
+        sp=SP_SANTA 
         if gift then
-        sp=113
-        spr(86,(j-1)*(8*i)+offx-i,ly-8*i,0,i)
+        sp=SP_SANTAGIFT
+        spr(SP_GIFT,(j-1)*(8*i)+offx-i,ly-8*i,0,i)
         end
       end
-      if giftshoty==i and giftshotx==j then sp=86 end
-      if (sp==97 or sp==113) and santadx<0 then flip=1 end
-      if hilightx==j and hilighty==i and v~=83 then for i=0,15 do pal(i,2) end end
+      if giftshoty==i and giftshotx==j then sp=SP_GIFT end
+      if (sp==SP_SANTA or sp==SP_SANTAGIFT) and santadx<0 then flip=1 end
+      if hilightx==j and hilighty==i and v~=SP_EMPTY then for i=0,15 do pal(i,2) end end
       spr(sp,(j-1)*(8*i)+offx,ly,0,i,flip)
       pal()
     end
@@ -298,15 +289,15 @@ end
 function render_foreground()
   -- clouds
   for i=240,-8,-8 do
-    if not (i>2 and i<60-16) then spr(84,i+(t*0.125)%8,136/2-4-8-8,0) end
+    if not (i>2 and i<60-16) then spr(SP_CLOUD,i+(t*0.125)%8,136/2-4-8-8,0) end
     if i<120+16 then
-    if not (i>2 and i<60-16) then spr(84,i*2+(t*0.25)%16,136/2-4-8-2-8-8,0,2) end
+    if not (i>2 and i<60-16) then spr(SP_CLOUD,i*2+(t*0.25)%16,136/2-4-8-2-8-8,0,2) end
     end
     if i<80+24 then
-    if not (i>2 and i<60-16) then spr(84,i*3+(t*0.5)%24,136/2-4-8-16-4-16,0,3) end
+    if not (i>2 and i<60-16) then spr(SP_CLOUD,i*3+(t*0.5)%24,136/2-4-8-16-4-16,0,3) end
     end
     if i<60+32 then
-    if not (i>2 and i<60-16) then spr(84,i*4+(t)%32,136/2-4-8-16-24-8-4,0,4) end
+    if not (i>2 and i<60-16) then spr(SP_CLOUD,i*4+(t)%32,136/2-4-8-16-24-8-4,0,4) end
     end
   end
   
@@ -324,10 +315,10 @@ function render_foreground()
   -- item icons
   for i=0,3-1 do
   rectb(240/2+40+i*12-1,0,10,16,12)
-  spr(87+i,240/2+40+i*12,1,0)
+  spr(SP_SOCK+i,240/2+40+i*12,1,0)
   local col=12
-  if pack[87+i]<=0 then col=2 end
-  print(math.min(pack[87+i],9),240/2+40+i*12+1+1,16-1-6+1,col)
+  if pack[SP_SOCK+i]<=0 then col=2 end
+  print(math.min(pack[SP_SOCK+i],9),240/2+40+i*12+1+1,16-1-6+1,col)
   end
 
   print('Secret',32+32+16,6,11,false,3,true)
@@ -339,6 +330,27 @@ function SCN(i)
   poke(0x3FC0+11*3,0xA4+(i*8+t)%64)
   poke(0x3FC0+11*3+1,0x24+(i*12+t)%164)
   poke(0x3FC0+11*3+2,0x24+(i*6+t)%64)
+end
+
+function music1()
+  if t%49%24==7 and t%6~=0 then
+    sfx(1,12*4+t//6%12-t//2%16,20,0)
+  end
+  if t%49==7 then
+    sfx(1,12*3+t//6%12-t//2%16,60,1)
+  end
+end
+
+function music2()
+  tt=tt or 0
+  if (tt<18*8*4 and tt%18==0) or (tt>=18*8*4 and tt%12==0) then
+    sfx(1,12*4-tt//6%12+tt//2%16-tt//3%9,20,0)
+  end
+  --if tt%24==0 then
+    --sfx(1,12*3-tt//6%12+tt//2%16-tt//3%9,20,1)
+  --end
+  if tt==18*8*9+18*2-1 then tt=-1 end
+  tt=tt+1
 end
 
 -- palette swapping by borbware
