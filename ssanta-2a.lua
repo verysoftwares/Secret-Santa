@@ -124,9 +124,8 @@ function advance_timer()
     if santax<1 then santax=#lanes[santay]; border=true end
     local step=lanes[santay][santax]
     if step==86 then 
-      if not gift and pack[88]>0 then gift=1; lanes[santay][santax]=83; pack[88]=pack[88]-1; if pack[88]<0 then pack[88]=0 end
-      else hilightx=santax; hilighty=santay end
-      santax=prevx
+      if not gift and pack[88]>0 then gift=1; lanes[santay][santax]=83; santax=prevx; sub_pack(88)
+      else hilightx=santax; hilighty=santay; santax=prevx end
     elseif step==81 then
       hilightx=santax; hilighty=santay
       santax=prevx
@@ -159,10 +158,11 @@ function advance_timer()
   if timer<8 then hilightx=nil; hilighty=nil end
 end
 
+labels={}
 function sub_pack(i)
   pack[i]=pack[i]-1
   if pack[i]<0 then pack[i]=0 end
-  
+  table.insert(labels,{x=santax,y=santay,id=i,t=t})
 end
 
 function render_background()
@@ -216,6 +216,17 @@ function render_foreground()
     if i<60+32 then
     if not (i>2 and i<60-16) then spr(84,i*4+(t)%32,136/2-4-8-16-24-8-4,0,4) end
     end
+  end
+  
+  for i=#labels,1,-1 do
+    local l=labels[i]
+    local ly
+    if l.y==1 then ly=136/2-4 end
+    if l.y==2 then ly=136/2-4+8-2 end
+    if l.y==3 then ly=136/2-4+8+16-4-4 end
+    if l.y==4 then ly=136/2-4+8+16+24-8-4 end
+    spr(l.id,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y,0,l.y)
+    if t-l.t>60 then table.remove(labels,i) end
   end
 
   -- item icons
