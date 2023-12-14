@@ -13,247 +13,247 @@ santay=4
 santadx=1
 
 function music1()
-		if t%49%24==7 and t%6~=0 then
-				sfx(1,12*4+t//6%12-t//2%16,20,0)
-		end
-		if t%49==7 then
-				sfx(1,12*3+t//6%12-t//2%16,60,1)
-		end
+  if t%49%24==7 and t%6~=0 then
+    sfx(1,12*4+t//6%12-t//2%16,20,0)
+  end
+  if t%49==7 then
+    sfx(1,12*3+t//6%12-t//2%16,60,1)
+  end
 end
 function music2()
-		tt=tt or 0
-		if (tt<18*8*4 and tt%18==0) or (tt>=18*8*4 and tt%12==0) then
-				sfx(1,12*4-tt//6%12+tt//2%16-tt//3%9,20,0)
-		end
-		if tt==18*8*9+18*2-1 then tt=-1 end
-		tt=tt+1
+  tt=tt or 0
+  if (tt<18*8*4 and tt%18==0) or (tt>=18*8*4 and tt%12==0) then
+    sfx(1,12*4-tt//6%12+tt//2%16-tt//3%9,20,0)
+  end
+  if tt==18*8*9+18*2-1 then tt=-1 end
+  tt=tt+1
 end
 
 lanes={
-		{},
-		{},
-		{},
-		{},
+  {},
+  {},
+  {},
+  {},
 }
 for i=1,4 do
-		for j=0,240/i-1,8 do
-				local sp=83
-				if math.random()<0.15 then sp=86
-				elseif math.random()<0.15 then sp=81 end
-				table.insert(lanes[i],sp)
-		end
+  for j=0,240/i-1,8 do
+    local sp=83
+    if math.random()<0.15 then sp=86
+    elseif math.random()<0.15 then sp=81 end
+    table.insert(lanes[i],sp)
+  end
 end
 pack={}
 for i=87,89 do
-		pack[i]=4
+  pack[i]=4
 end
 
 maxtimer=32
 timer=maxtimer
 
 function TIC()
-		music2()
+  music2()
 
-		santa_input()
-		advance_timer()
+  santa_input()
+  advance_timer()
 
-		render_background()
-		render_foreground()
+  render_background()
+  render_foreground()
 
-		t=t+1
+  t=t+1
 end
 
 function santa_input()
-		if btnp(0) and santay>1 and pack[89]>0 then
-				local prevx=santax 
-				santax=math.min(math.max(math.floor(santax*(santay/(santay-1))+0.5*santadx+(-1+1-timer/maxtimer)*santadx),1),#lanes[santay-1]); 
-				santay=santay-1; 
-				timer=maxtimer; hilightx=nil; hilighty=nil 
-				local step=lanes[santay][santax]
-				if step==81 or step==86 then
-						hilightx=santax; hilighty=santay
-						santax=prevx; santay=santay+1
-				elseif step>=87 and step<=89 then
-						pack[step]=pack[step]+1
-						--if step==88 then pack[step]=pack[step]+1 end
-						lanes[santay][santax]=83
-						pack[89]=pack[89]-1
-						if pack[89]<0 then pack[89]=0 end
-				else
-						pack[89]=pack[89]-1
-						if pack[89]<0 then pack[89]=0 end
-				end
-		end
-		if btnp(1) and santay<4 and pack[89]>0 then 
-				local prevx=santax
-				santax=math.min(math.max(math.floor(santax*(santay/(santay+1))+0.5+(-0.5+1-timer/maxtimer)*santadx),1),#lanes[santay+1]); 
-				santay=santay+1; 
-				timer=maxtimer; hilightx=nil; hilighty=nil 
-				local step=lanes[santay][santax]
-				if step==81 or step==86 then
-						hilightx=santax; hilighty=santay
-						santax=prevx; santay=santay-1
-				elseif step>=87 and step<=89 then
-						pack[step]=pack[step]+1
-						--if step==88 then pack[step]=pack[step]+1 end
-						lanes[santay][santax]=83
-						pack[89]=pack[89]-1
-						if pack[89]<0 then pack[89]=0 end
-				else
-						pack[89]=pack[89]-1
-						if pack[89]<0 then pack[89]=0 end
-				end
-		end
-		-- throw with Z
-		if btnp(4) and gift and pack[88]>0 then
-				giftshotx=santax; giftshoty=santay; giftshotdx=santadx
-				gift=gift-1
-				if gift<=0 then gift=nil end
-				timer=maxtimer
-				pack[88]=pack[88]-1
-				if pack[88]<0 then pack[88]=0 end
-		end
-		-- turn with X or arrows
-		if (btnp(5) or (santadx>0 and btnp(2)) or (santadx<0 and btnp(3))) and pack[87]>0 then
-				santadx=-santadx
-				timer=maxtimer
-				pack[87]=pack[87]-1
-				if pack[87]<0 then pack[87]=0 end
-		end
+  if btnp(0) and santay>1 and pack[89]>0 then
+    local prevx=santax 
+    santax=math.min(math.max(math.floor(santax*(santay/(santay-1))+0.5*santadx+(-1+1-timer/maxtimer)*santadx),1),#lanes[santay-1]); 
+    santay=santay-1; 
+    timer=maxtimer; hilightx=nil; hilighty=nil 
+    local step=lanes[santay][santax]
+    if step==81 or step==86 then
+      hilightx=santax; hilighty=santay
+      santax=prevx; santay=santay+1
+    elseif step>=87 and step<=89 then
+      pack[step]=pack[step]+1
+      --if step==88 then pack[step]=pack[step]+1 end
+      lanes[santay][santax]=83
+      sub_pack(89)
+    else
+      sub_pack(89)
+    end
+  end
+  if btnp(1) and santay<4 and pack[89]>0 then 
+    local prevx=santax
+    santax=math.min(math.max(math.floor(santax*(santay/(santay+1))+0.5+(-0.5+1-timer/maxtimer)*santadx),1),#lanes[santay+1]); 
+    santay=santay+1; 
+    timer=maxtimer; hilightx=nil; hilighty=nil 
+    local step=lanes[santay][santax]
+    if step==81 or step==86 then
+      hilightx=santax; hilighty=santay
+      santax=prevx; santay=santay-1
+    elseif step>=87 and step<=89 then
+      pack[step]=pack[step]+1
+      --if step==88 then pack[step]=pack[step]+1 end
+      lanes[santay][santax]=83
+      sub_pack(89)
+    else
+      sub_pack(89)
+    end
+  end
+  -- throw with Z
+  if btnp(4) and gift and pack[88]>0 then
+    giftshotx=santax; giftshoty=santay; giftshotdx=santadx
+    gift=gift-1
+    if gift<=0 then gift=nil end
+    timer=maxtimer
+    sub_pack(88)
+  end
+  -- turn with X or arrows
+  if (btnp(5) or (santadx>0 and btnp(2)) or (santadx<0 and btnp(3))) and pack[87]>0 then
+    santadx=-santadx
+    timer=maxtimer
+    sub_pack(87)
+  end
 end
 
 function advance_timer()
-		timer=timer-1
+  timer=timer-1
 
-		if timer==0 then local prevx=santax; santax=santax+santadx; local border=false
-				if santax>=240/8/santay+1 then santax=1; border=true end
-				if santax<1 then santax=#lanes[santay]; border=true end
-				local step=lanes[santay][santax]
-				if step==86 then 
-						if not gift and pack[88]>0 then gift=1; lanes[santay][santax]=83; pack[88]=pack[88]-1; if pack[88]<0 then pack[88]=0 end
-						else hilightx=santax; hilighty=santay end
-						santax=prevx
-				elseif step==81 then
-						hilightx=santax; hilighty=santay
-						santax=prevx
-				elseif step>=87 and step<=89 then
-						pack[step]=pack[step]+1
-						--if step==88 then pack[step]=pack[step]+1 end
-						lanes[santay][santax]=83
-				end
-				if border and santax~=prevx then if gift then gift=gift-1; if gift<=0 then gift=nil end end end
-				timer=maxtimer 
-		end
+  if timer==0 then local prevx=santax; santax=santax+santadx; local border=false
+    if santax>=240/8/santay+1 then santax=1; border=true end
+    if santax<1 then santax=#lanes[santay]; border=true end
+    local step=lanes[santay][santax]
+    if step==86 then 
+      if not gift and pack[88]>0 then gift=1; lanes[santay][santax]=83; pack[88]=pack[88]-1; if pack[88]<0 then pack[88]=0 end
+      else hilightx=santax; hilighty=santay end
+      santax=prevx
+    elseif step==81 then
+      hilightx=santax; hilighty=santay
+      santax=prevx
+    elseif step>=87 and step<=89 then
+      pack[step]=pack[step]+1
+      --if step==88 then pack[step]=pack[step]+1 end
+      lanes[santay][santax]=83
+    end
+    if border and santax~=prevx then if gift then gift=gift-1; if gift<=0 then gift=nil end end end
+    timer=maxtimer 
+  end
 
-		if giftshotx then
-				if t%6==0 then giftshotx=giftshotx+giftshotdx; 
-				if giftshotx>#lanes[giftshoty] then giftshotx=1--giftshotx=nil; giftshoty=nil
-				elseif giftshotx<1 then giftshotx=#lanes[giftshoty] end
-				if lanes[giftshoty][giftshotx]~=83 and lanes[giftshoty][giftshotx]~=0 then lanes[giftshoty][giftshotx]=83; giftshotx=nil; giftshoty=nil 
-				elseif lanes[giftshoty][giftshotx]==83 or lanes[giftshoty][giftshotx]==0 then 
-						local rng=math.random(1,10)
-						local item=0
-						if rng>=7 then item=88
-						elseif rng>=4 then item=89
-						elseif rng>=2 then item=87
-						else item=86 end
-						lanes[giftshoty][giftshotx]=item
-				end
-				end
-		end
+  if giftshotx then
+    if t%6==0 then giftshotx=giftshotx+giftshotdx; 
+    if giftshotx>#lanes[giftshoty] then giftshotx=1--giftshotx=nil; giftshoty=nil
+    elseif giftshotx<1 then giftshotx=#lanes[giftshoty] end
+    if lanes[giftshoty][giftshotx]~=83 and lanes[giftshoty][giftshotx]~=0 then lanes[giftshoty][giftshotx]=83; giftshotx=nil; giftshoty=nil 
+    elseif lanes[giftshoty][giftshotx]==83 or lanes[giftshoty][giftshotx]==0 then 
+      local rng=math.random(1,10)
+      local item=0
+      if rng>=7 then item=88
+      elseif rng>=4 then item=89
+      elseif rng>=2 then item=87
+      else item=86 end
+      lanes[giftshoty][giftshotx]=item
+    end
+    end
+  end
 
-		if timer<8 then hilightx=nil; hilighty=nil end
+  if timer<8 then hilightx=nil; hilighty=nil end
+end
+
+function sub_pack(i)
+  pack[i]=pack[i]-1
+  if pack[i]<0 then pack[i]=0 end
+  
 end
 
 function render_background()
-		cls(0)
+  cls(0)
 
-		for i=1,4 do
-				local ly
-				if i==1 then ly=136/2-4 end
-				if i==2 then ly=136/2-4+8-2 end
-				if i==3 then ly=136/2-4+8+16-4-4 end
-				if i==4 then ly=136/2-4+8+16+24-8-4 end
-				for j,v in ipairs(lanes[i]) do
-						local offx=0--t*(i*0.25)%(8*i)
-						local flip=0
-						local sp=v
-						-- preview back tile
-						if i==santay-1 and j==math.min(math.max(math.floor(santax*(santay/(santay-1))+0.5*santadx+(-1+1-timer/maxtimer)*santadx),1),#lanes[santay-1]) then
-								--rect((j-1)*(8*i)+offx,ly,i*8,i*8,4)
-						end
-						-- preview front tile
-						if i==santay+1 and j==math.min(math.max(math.floor(santax*(santay/(santay+1))+0.5+(-0.5+1-timer/maxtimer)*santadx),1),#lanes[santay+1]) then
-								--rect((j-1)*(8*i)+offx,ly,i*8,i*8,5)
-						end
-						if santay==i and j==santax then 
-								if v==86 and not gift then lanes[i][j]=83; gift=1 end
-								sp=97 
-								if gift then
-								sp=113
-								spr(86,(j-1)*(8*i)+offx-i,ly-8*i,0,i)
-								end
-						end
-						if giftshoty==i and giftshotx==j then sp=86 end
-						if (sp==97 or sp==113) and santadx<0 then flip=1 end
-						if hilightx==j and hilighty==i then for i=0,15 do pal(i,2) end end
-						spr(sp,(j-1)*(8*i)+offx,ly,0,i,flip)
-						pal()
-				end
-		end
+  for i=1,4 do
+    local ly
+    if i==1 then ly=136/2-4 end
+    if i==2 then ly=136/2-4+8-2 end
+    if i==3 then ly=136/2-4+8+16-4-4 end
+    if i==4 then ly=136/2-4+8+16+24-8-4 end
+    for j,v in ipairs(lanes[i]) do
+      local offx=0--t*(i*0.25)%(8*i)
+      local flip=0
+      local sp=v
+      -- preview back tile
+      if i==santay-1 and j==math.min(math.max(math.floor(santax*(santay/(santay-1))+0.5*santadx+(-1+1-timer/maxtimer)*santadx),1),#lanes[santay-1]) then
+        --rect((j-1)*(8*i)+offx,ly,i*8,i*8,4)
+      end
+      -- preview front tile
+      if i==santay+1 and j==math.min(math.max(math.floor(santax*(santay/(santay+1))+0.5+(-0.5+1-timer/maxtimer)*santadx),1),#lanes[santay+1]) then
+        --rect((j-1)*(8*i)+offx,ly,i*8,i*8,5)
+      end
+      if santay==i and j==santax then 
+        if v==86 and not gift then lanes[i][j]=83; gift=1 end
+        sp=97 
+        if gift then
+        sp=113
+        spr(86,(j-1)*(8*i)+offx-i,ly-8*i,0,i)
+        end
+      end
+      if giftshoty==i and giftshotx==j then sp=86 end
+      if (sp==97 or sp==113) and santadx<0 then flip=1 end
+      if hilightx==j and hilighty==i then for i=0,15 do pal(i,2) end end
+      spr(sp,(j-1)*(8*i)+offx,ly,0,i,flip)
+      pal()
+    end
+  end
 end
 
 function render_foreground()
-		-- clouds
-		for i=240,-8,-8 do
-				if not (i>2 and i<60-16) then spr(84,i+(t*0.125)%8,136/2-4-8-8,0) end
-				if i<120+16 then
-				if not (i>2 and i<60-16) then spr(84,i*2+(t*0.25)%16,136/2-4-8-2-8-8,0,2) end
-				end
-				if i<80+24 then
-				if not (i>2 and i<60-16) then spr(84,i*3+(t*0.5)%24,136/2-4-8-16-4-16,0,3) end
-				end
-				if i<60+32 then
-				if not (i>2 and i<60-16) then spr(84,i*4+(t)%32,136/2-4-8-16-24-8-4,0,4) end
-				end
-		end
+  -- clouds
+  for i=240,-8,-8 do
+    if not (i>2 and i<60-16) then spr(84,i+(t*0.125)%8,136/2-4-8-8,0) end
+    if i<120+16 then
+    if not (i>2 and i<60-16) then spr(84,i*2+(t*0.25)%16,136/2-4-8-2-8-8,0,2) end
+    end
+    if i<80+24 then
+    if not (i>2 and i<60-16) then spr(84,i*3+(t*0.5)%24,136/2-4-8-16-4-16,0,3) end
+    end
+    if i<60+32 then
+    if not (i>2 and i<60-16) then spr(84,i*4+(t)%32,136/2-4-8-16-24-8-4,0,4) end
+    end
+  end
 
-		-- item icons
-		for i=0,3-1 do
-		rectb(240/2+40+i*12-1,0,10,16,12)
-		spr(87+i,240/2+40+i*12,1,0)
-		local col=12
-		if pack[87+i]<=0 then col=2 end
-		print(math.min(pack[87+i],9),240/2+40+i*12+1+1,16-1-6+1,col)
-		end
+  -- item icons
+  for i=0,3-1 do
+  rectb(240/2+40+i*12-1,0,10,16,12)
+  spr(87+i,240/2+40+i*12,1,0)
+  local col=12
+  if pack[87+i]<=0 then col=2 end
+  print(math.min(pack[87+i],9),240/2+40+i*12+1+1,16-1-6+1,col)
+  end
 
-		print('Secret',32+32+16,6,11,false,3,true)
-		print('Santa 2023',32+32+16-32+8+8,6+16,11,false,2,true)
-		print('by Leonard S.',32+32+16-32+8-16+2,6+16+16,12,false,1,true)
+  print('Secret',32+32+16,6,11,false,3,true)
+  print('Santa 2023',32+32+16-32+8+8,6+16,11,false,2,true)
+  print('by Leonard S.',32+32+16-32+8-16+2,6+16+16,12,false,1,true)
 end
 
 function SCN(i)
-		--poke(0x3FC0+11*3,0x73)
-		--poke(0x3FC0+11*3+1,0xFA)
-		--poke(0x3FC0+11*3+2,0xF7)
-		poke(0x3FC0+11*3,0xA4+(i*8+t)%64)
-		poke(0x3FC0+11*3+1,0x24+(i*12+t)%164)
-		poke(0x3FC0+11*3+2,0x24+(i*6+t)%64)
+  --poke(0x3FC0+11*3,0x73)
+  --poke(0x3FC0+11*3+1,0xFA)
+  --poke(0x3FC0+11*3+2,0xF7)
+  poke(0x3FC0+11*3,0xA4+(i*8+t)%64)
+  poke(0x3FC0+11*3+1,0x24+(i*12+t)%164)
+  poke(0x3FC0+11*3+2,0x24+(i*6+t)%64)
 end
 
 -- basic AABB collision.
-		function AABB(x1,y1,w1,h1, x2,y2,w2,h2)
-				return (x1 < x2 + w2 and
-												x1 + w1 > x2 and
-												y1 < y2 + h2 and
-												y1 + h1 > y2)
-		end
+  function AABB(x1,y1,w1,h1, x2,y2,w2,h2)
+    return (x1 < x2 + w2 and
+            x1 + w1 > x2 and
+            y1 < y2 + h2 and
+            y1 + h1 > y2)
+  end
 
 -- palette swapping by BORB
-		function pal(c0,c1)
-		  if(c0==nil and c1==nil)then for i=0,15 do poke4(0x3FF0*2+i,i) end
-		  else poke4(0x3FF0*2+c0,c1) end
-		end
+  function pal(c0,c1)
+    if(c0==nil and c1==nil)then for i=0,15 do poke4(0x3FF0*2+i,i) end
+    else poke4(0x3FF0*2+c0,c1) end
+  end
 
 -- <TILES>
 -- 001:eccccccccc888888caaaaaaaca888888cacccccccacc0ccccacc0ccccacc0ccc
