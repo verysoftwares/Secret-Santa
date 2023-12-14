@@ -2,6 +2,7 @@
 -- author:  verysoftwares
 -- desc:    for Secret Santa Jam
 -- site:    https://verysoftwares.itch.io
+-- license: MIT
 -- script:  lua
 
 t=0
