@@ -136,13 +136,18 @@ function advance_timer()
   timer=timer-1
 
   if timer<=0 then
-    if timer==0 then elf_cor=elf_advance() end
-    timer=0
-    if t%8==0 and not coroutine.resume(elf_cor) then
-    timer=maxtimer 
+    --if timer==0 then elf_cor=elf_advance() end
+    --timer=0
+    --if t%8==0 and not coroutine.resume(elf_cor) then
+    --timer=maxtimer 
+    --santa_advance()
+    --elf_cor=nil
+    --end
     santa_advance()
+    elf_cor=elf_advance()
+    while coroutine.resume(elf_cor) do end
+    timer=maxtimer
     elf_cor=nil
-    end
   end
 
   if giftshotx and t%6==0 then
@@ -283,7 +288,7 @@ function render_background()
       end
       if giftshoty==i and giftshotx==j then sp=86 end
       if (sp==97 or sp==113) and santadx<0 then flip=1 end
-      if hilightx==j and hilighty==i then for i=0,15 do pal(i,2) end end
+      if hilightx==j and hilighty==i and v~=83 then for i=0,15 do pal(i,2) end end
       spr(sp,(j-1)*(8*i)+offx,ly,0,i,flip)
       pal()
     end
@@ -336,15 +341,7 @@ function SCN(i)
   poke(0x3FC0+11*3+2,0x24+(i*6+t)%64)
 end
 
--- basic AABB collision.
-  function AABB(x1,y1,w1,h1, x2,y2,w2,h2)
-    return (x1 < x2 + w2 and
-            x1 + w1 > x2 and
-            y1 < y2 + h2 and
-            y1 + h1 > y2)
-  end
-
--- palette swapping by BORB
+-- palette swapping by borbware
   function pal(c0,c1)
     if(c0==nil and c1==nil)then for i=0,15 do poke4(0x3FF0*2+i,i) end
     else poke4(0x3FF0*2+c0,c1) end
