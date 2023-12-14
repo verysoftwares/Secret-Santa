@@ -228,8 +228,13 @@ function gift_advance()
   giftshotx=giftshotx+giftshotdx; 
   if giftshotx>#lanes[giftshoty] then giftshotx=1--giftshotx=nil; giftshoty=nil
   elseif giftshotx<1 then giftshotx=#lanes[giftshoty] end
-  if lanes[giftshoty][giftshotx]~=83 and lanes[giftshoty][giftshotx]~=0 then lanes[giftshoty][giftshotx]=83; giftshotx=nil; giftshoty=nil 
-  elseif lanes[giftshoty][giftshotx]==83 or lanes[giftshoty][giftshotx]==0 then 
+  local step=lanes[giftshoty][giftshotx]
+  if step~=83 and step~=0 then 
+    if (step~=81 and step~=81-16) or ((step==81 and giftshotdx>0) or (step==81-16 and giftshotdx<0)) then
+      lanes[giftshoty][giftshotx]=83; 
+    end
+    giftshotx=nil; giftshoty=nil; giftshotdx=nil
+  elseif step==83 or step==0 then 
     local rng=math.random(1,10)
     local item=0
     if rng>=7 then item=88
