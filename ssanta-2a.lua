@@ -175,7 +175,7 @@ function elf_advance()
       local coll,colli
       local dx
       if v==SP_ELFL then
-      		dx=-1
+        dx=-1
         if j+dx<1 then
         colli=#old_lanes[i]
         else 
