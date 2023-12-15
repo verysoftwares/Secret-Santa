@@ -236,7 +236,7 @@ labels={}
 function sub_pack(i)
   pack[i]=pack[i]-1
   if pack[i]<0 then pack[i]=0 end
-  table.insert(labels,{x=santax,y=santay,id=i,t=t})
+  table.insert(labels,{x=santax,y=santay,id=i,count=pack[i],t=t})
 end
 
 function render_background()
@@ -299,7 +299,22 @@ function render_foreground()
     if l.y==2 then ly=136/2-4+8-2 end
     if l.y==3 then ly=136/2-4+8+16-4-4 end
     if l.y==4 then ly=136/2-4+8+16+24-8-4 end
+    for i=0,15 do pal(i,0) end
+    spr(l.id,(l.x-1)*(8*l.y)+l.y,ly-(t-l.t)*0.2*l.y,0,l.y)
+    spr(l.id,(l.x-1)*(8*l.y)-l.y,ly-(t-l.t)*0.2*l.y,0,l.y)
+    spr(l.id,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y+l.y,0,l.y)
+    spr(l.id,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y-l.y,0,l.y)
+    pal()
     spr(l.id,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y,0,l.y)
+    if l.count==0 then
+      for i=0,15 do pal(i,0) end
+      spr(72,(l.x-1)*(8*l.y)+l.y,ly-(t-l.t)*0.2*l.y,0,l.y)
+      spr(72,(l.x-1)*(8*l.y)-l.y,ly-(t-l.t)*0.2*l.y,0,l.y)
+      spr(72,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y+l.y,0,l.y)
+      spr(72,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y-l.y,0,l.y)
+      pal()
+      spr(72,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y,0,l.y)
+    end
     if t-l.t>60 then table.remove(labels,i) end
   end
 
@@ -363,6 +378,7 @@ end
 -- 066:566666600556644405566a4a0556644400566655000666650006666500066660
 -- 070:000000000660066006c66c6006666660ccc66ccdccc66ccdccc66ccdddd77ddd
 -- 071:000000000990099009c99c9009999990ccc99ccdccc99ccdccc99ccdddd88ddd
+-- 072:0200002222200222022202200022200000022200022022202220022222000020
 -- 081:0666666544466660a4a666604446660055666550566665505666655006666000
 -- 082:0666666544466550a4a665504446655055666500566660005666600006666000
 -- 083:000ffff00ffffff00ffffff0dffff888ddeee888ddeee88800eeeee000eeee00
