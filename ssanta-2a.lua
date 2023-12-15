@@ -211,15 +211,25 @@ function elf_advance()
         lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
         coroutine.yield()
       else
+        local intent=math.random(0,2)
         local px
-        if i>1 then
-        px=parallax_shift(-1,j,i,dx)
-        if old_lanes[i-1][px]==SP_EMPTY and lanes[i-1][px]==SP_EMPTY then lanes[i][j]=83; lanes[i-1][px]=v; coroutine.yield() end
+        if intent==0 then
+          if i>1 then
+          px=parallax_shift(-1,j,i,dx)
+          if old_lanes[i-1][px]==SP_EMPTY and lanes[i-1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i-1][px]=v; coroutine.yield() end
+          end
+        elseif intent==1 then
+          if i<4 then
+          px=parallax_shift(1,j,i,dx)
+          if old_lanes[i+1][px]==SP_EMPTY and lanes[i+1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i+1][px]=v; coroutine.yield() end
+          end
+        elseif intent==2 then
+          if v==SP_ELFL then
+          lanes[i][j]=SP_ELFR
+          elseif v==SP_ELFR then
+          lanes[i][j]=SP_ELFL
+          end
         end
-        --[[if i<4 and lanes[i][j]==v then
-        px=parallax_shift(1,j,i,dx)
-        if old_lanes[i+1][px]==83 and lanes[i+1][px]==83  then lanes[i][j]=83; lanes[i+1][px]=v; coroutine.yield() end
-        end]]
       end
       end
     end
