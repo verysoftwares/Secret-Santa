@@ -200,7 +200,6 @@ function elf_advance()
         else 
         colli=j+dx
         end
-        coll=old_lanes[i][colli] 
       elseif v==SP_ELFR then 
         dx=1
         if j+dx>#old_lanes[i] then
@@ -208,8 +207,8 @@ function elf_advance()
         else
         colli=j+dx 
         end
-        coll=old_lanes[i][colli]
       end
+      coll=old_lanes[i][colli] 
       
       if coll==SP_EMPTY and lanes[i][colli]==SP_EMPTY then
         -- you're good to walk forward!
@@ -380,6 +379,10 @@ function render_background()
 end
 
 function render_foreground()
+  --line(0,56+2,240,56+2,8)
+  --line(0,56+1+2,240,56+1+2,9)
+  --line(0,56+1+4-1,240,56+1+4-1,8)
+
   -- item icons
   local offx=4
   local offy=1
