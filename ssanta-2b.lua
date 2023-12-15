@@ -44,7 +44,7 @@ for i=87,89 do
   pack[i]=4
 end
 
-maxtimer=32
+maxtimer=36
 timer=maxtimer
 
 function TIC()
@@ -414,6 +414,13 @@ function render_foreground()
     end
   end
   
+  local offx=4
+  local offy=5
+  print('Secret',32+32+16+offx,6+offy,11,false,3,true)
+  print('Santa 2023',32+32+16-32+8+8+offx,6+16+offy,11,false,2,true)
+  print('2023',32+32+16-32+8+8+46-2+offx,6+16+offy,12,false,2,true)
+  print('by Leonard S.',32+32+16-32+8-16+2+offx,6+16+16,12,false,1,true)
+
   for i=#labels,1,-1 do
     local l=labels[i]
     local ly
@@ -441,13 +448,6 @@ function render_foreground()
     end
     if t-l.t>=80-1 then table.remove(labels,i) end
   end
-
-  local offx=4
-  local offy=5
-  print('Secret',32+32+16+offx,6+offy,11,false,3,true)
-  print('Santa 2023',32+32+16-32+8+8+offx,6+16+offy,11,false,2,true)
-  print('2023',32+32+16-32+8+8+46-2+offx,6+16+offy,12,false,2,true)
-  print('by Leonard S.',32+32+16-32+8-16+2+offx,6+16+16,12,false,1,true)
 end
 
 function SCN(i)
