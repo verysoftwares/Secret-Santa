@@ -207,23 +207,30 @@ function elf_advance()
         end
         coll=old_lanes[i][colli]
       end
+      
       if coll==SP_EMPTY and lanes[i][colli]==SP_EMPTY then
+        -- you're good to walk forward!
         lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
         coroutine.yield()
       else
+        -- collision with a solid object.
+        -- time to try dodging
         local intent=math.random(0,2)
         local px
         if intent==0 then
+          -- move further
           if i>1 then
           px=parallax_shift(-1,j,i,dx)
           if old_lanes[i-1][px]==SP_EMPTY and lanes[i-1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i-1][px]=v; coroutine.yield() end
           end
         elseif intent==1 then
+          -- move closer
           if i<4 then
           px=parallax_shift(1,j,i,dx)
           if old_lanes[i+1][px]==SP_EMPTY and lanes[i+1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i+1][px]=v; coroutine.yield() end
           end
         elseif intent==2 then
+          -- turn around
           if v==SP_ELFL then
           lanes[i][j]=SP_ELFR
           elseif v==SP_ELFR then
