@@ -282,6 +282,12 @@ function render_background()
     if i==3 then ly=136/2-4+8+16-4-4 end
     if i==4 then ly=136/2-4+8+16+24-8-4 end
     for j,v in ipairs(lanes[i]) do
+      if v==SP_EMPTY then
+      spr(v,(j-1)*(8*i),ly,0,i)
+      end
+    end
+    for j,v in ipairs(lanes[i]) do
+      if v~=SP_EMPTY or (i==santay and j==santax) then
       local offx=0--t*(i*0.25)%(8*i)
       local flip=0
       local sp=v
@@ -293,19 +299,34 @@ function render_background()
       if i==santay+1 and j==parallax_shift(1,santax,santay,santadx) then
         --rect((j-1)*(8*i)+offx,ly,i*8,i*8,5)
       end
-      if santay==i and j==santax then 
+      if i==santay and j==santax then 
         if v==SP_GIFT and not gift then lanes[i][j]=SP_EMPTY; gift=1 end
         sp=SP_SANTA 
         if gift then
         sp=SP_SANTAGIFT
+        for i=0,15 do pal(i,0) end
+        spr(SP_GIFT,(j-1)*(8*i)+offx-i+i,ly-8*i,0,i)
+        spr(SP_GIFT,(j-1)*(8*i)+offx-i-i,ly-8*i,0,i)
+        spr(SP_GIFT,(j-1)*(8*i)+offx-i,ly-8*i+i,0,i)
+        spr(SP_GIFT,(j-1)*(8*i)+offx-i,ly-8*i-i,0,i)
+        pal()
         spr(SP_GIFT,(j-1)*(8*i)+offx-i,ly-8*i,0,i)
         end
       end
       if giftshoty==i and giftshotx==j then sp=SP_GIFT end
       if (sp==SP_SANTA or sp==SP_SANTAGIFT) and santadx<0 then flip=1 end
+      if sp~=83 then
+      for i=0,15 do pal(i,0) end
+      spr(sp,(j-1)*(8*i)+offx+i,ly,0,i,flip)
+      spr(sp,(j-1)*(8*i)+offx-i,ly,0,i,flip)
+      spr(sp,(j-1)*(8*i)+offx,ly+i,0,i,flip)
+      spr(sp,(j-1)*(8*i)+offx,ly-i,0,i,flip)
+      pal()
+      end
       if hilightx==j and hilighty==i and v~=SP_EMPTY then for i=0,15 do pal(i,2) end end
       spr(sp,(j-1)*(8*i)+offx,ly,0,i,flip)
       pal()
+      end
     end
   end
 end
