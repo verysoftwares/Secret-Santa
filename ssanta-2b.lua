@@ -130,13 +130,14 @@ function parallax_shift(dir,sx,sy,sdx)
   end
 end
 
+--t2=0
 function advance_timer()
   timer=timer-1
 
   if timer<=0 then
     --if timer==0 then elf_cor=elf_advance() end
     --timer=0
-    --if t%8==0 and not coroutine.resume(elf_cor) then
+    --if t2%8==0 and not coroutine.resume(elf_cor) then
     --timer=maxtimer 
     --santa_advance()
     --elf_cor=nil
@@ -153,6 +154,8 @@ function advance_timer()
   end
 
   if timer<8 then hilightx=nil; hilighty=nil end
+  
+  --t2=t2+1
 end
 
 function santa_advance()
@@ -236,6 +239,7 @@ function elf_advance()
           elseif v==SP_ELFR then
           lanes[i][j]=SP_ELFL
           end
+          coroutine.yield()
         end
       end
       end
