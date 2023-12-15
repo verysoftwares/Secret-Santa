@@ -421,7 +421,7 @@ function render_foreground()
   print('2023',32+32+16-32+8+8+46-2+offx,6+16+offy,12,false,2,true)
   print('by Leonard S.',32+32+16-32+8-16+2+offx,6+16+16,12,false,1,true)
 
-  for i=#labels,1,-1 do
+  for i=1,#labels do
     local l=labels[i]
     local ly
     local offx=0
@@ -446,6 +446,9 @@ function render_foreground()
       pal()
       spr(SP_CROSS,(l.x-1)*(8*l.y)+offx,ly-(t-l.t)*0.2*l.y,0,l.y)
     end
+  end
+  for i=#labels,1,-1 do
+    local l=labels[i]
     if t-l.t>=80-1 then table.remove(labels,i) end
   end
 end
