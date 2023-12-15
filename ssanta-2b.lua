@@ -165,7 +165,7 @@ function santa_advance()
   if santax<1 then santax=#lanes[santay]; border=true end
   local step=lanes[santay][santax]
   if step==SP_GIFT then 
-    if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=83; santax=prevx; add_pack(SP_CANE,-1)
+    if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=SP_EMPTY; santax=prevx; add_pack(SP_CANE,-1)
     else hilightx=santax; hilighty=santay; santax=prevx; if not gift and pack[SP_CANE]<=0 then table.insert(labels,{x=santax,y=santay,id=SP_CANE,count=0,t=t}) end end
   elseif step==SP_ELFL or step==SP_ELFR then
     hilightx=santax; hilighty=santay
@@ -363,7 +363,7 @@ function render_background()
       end
       if giftshoty==i and giftshotx==j then sp=SP_GIFT end
       if (sp==SP_SANTA or sp==SP_SANTAGIFT) and santadx<0 then flip=1 end
-      if sp~=83 then
+      if sp~=SP_EMPTY then
       for i=0,15 do pal(i,0) end
       spr(sp,(j-1)*(8*i)+offx+i,ly,0,i,flip)
       spr(sp,(j-1)*(8*i)+offx-i,ly,0,i,flip)
