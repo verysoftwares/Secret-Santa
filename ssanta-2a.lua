@@ -61,26 +61,42 @@ end
 
 function santa_input()
   -- up to go further into the parallax
-  if btnp(0) and santay>1 and pack[SP_TREE]>0 then
-    santa_parallax(-1)
+  if btnp(0) and santay>1 then
+    if pack[SP_TREE]>0 then
+      santa_parallax(-1)
+    else
+      table.insert(labels,{x=santax,y=santay,id=SP_TREE,count=0,t=t})
+    end
   end
   -- down to get closer in the parallax
-  if btnp(1) and santay<4 and pack[SP_TREE]>0 then 
-    santa_parallax(1)
+  if btnp(1) and santay<4 then 
+    if pack[SP_TREE]>0 then
+      santa_parallax(1)
+    else
+      table.insert(labels,{x=santax,y=santay,id=SP_TREE,count=0,t=t})
+    end
   end
   -- throw with Z
-  if btnp(4) and gift and pack[SP_CANE]>0 then
-    giftshotx=santax; giftshoty=santay; giftshotdx=santadx
-    gift=gift-1
-    if gift<=0 then gift=nil end
-    timer=maxtimer
-    sub_pack(SP_CANE)
+  if btnp(4) and gift then
+    if pack[SP_CANE]>0 then
+      giftshotx=santax; giftshoty=santay; giftshotdx=santadx
+      gift=gift-1
+      if gift<=0 then gift=nil end
+      timer=maxtimer
+      sub_pack(SP_CANE)
+    else
+      table.insert(labels,{x=santax,y=santay,id=SP_CANE,count=0,t=t})
+				end
   end
   -- turn with X or arrows
-  if (btnp(5) or (santadx>0 and btnp(2)) or (santadx<0 and btnp(3))) and pack[SP_SOCK]>0 then
-    santadx=-santadx
-    timer=maxtimer
-    sub_pack(SP_SOCK)
+  if (btnp(5) or (santadx>0 and btnp(2)) or (santadx<0 and btnp(3))) then
+    if pack[SP_SOCK]>0 then
+      santadx=-santadx
+      timer=maxtimer
+      sub_pack(SP_SOCK)
+    else
+      table.insert(labels,{x=santax,y=santay,id=SP_SOCK,count=0,t=t})
+    end
   end
 end
 
@@ -352,9 +368,9 @@ function music2()
   if (tt<18*8*4 and tt%18==0) or (tt>=18*8*4 and tt%12==0) then
     sfx(1,12*4-tt//6%12+tt//2%16-tt//3%9,20,0)
   end
-  --if tt%24==0 then
-    --sfx(1,12*3-tt//6%12+tt//2%16-tt//3%9,20,1)
-  --end
+  if tt%36==0 then
+    sfx(1,12*4-tt//6%12+tt//2%16-tt//3%9,20,1)
+  end
   if tt==18*8*9+18*2-1 then tt=-1 end
   tt=tt+1
 end
