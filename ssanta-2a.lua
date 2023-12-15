@@ -86,7 +86,7 @@ function santa_input()
       sub_pack(SP_CANE)
     else
       table.insert(labels,{x=santax,y=santay,id=SP_CANE,count=0,t=t})
-				end
+    end
   end
   -- turn with X or arrows
   if (btnp(5) or (santadx>0 and btnp(2)) or (santadx<0 and btnp(3))) then
