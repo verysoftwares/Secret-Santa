@@ -273,7 +273,7 @@ function add_pack(i,n)
   pack[i]=pack[i]+n
   if n>0 then
     --if i==SP_CANE then pack[i]=pack[i]+1 end
-    if pack[i]>9 then pack[i]=9 end
+    if pack[i]>15 then pack[i]=15 end
   end
   if n<0 then
     if pack[i]<0 then pack[i]=0 end
@@ -389,7 +389,7 @@ function render_foreground()
   spr(SP_SOCK+i,240/2+40+i*12,1,0)
   local col=12
   if pack[SP_SOCK+i]<=0 then col=2 end
-  print(math.min(pack[SP_SOCK+i],9),240/2+40+i*12+1+1,16-1-6+1,col)
+  print(string.format('%x',math.min(pack[SP_SOCK+i],15)),240/2+40+i*12+1+1,16-1-6+1,col)
   end
 
   print('Secret',32+32+16,6,11,false,3,true)
