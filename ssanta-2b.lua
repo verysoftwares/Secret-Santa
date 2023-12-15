@@ -389,7 +389,7 @@ function render_foreground()
   spr(SP_SOCK+i,240/2+40+i*12,1,0)
   local col=12
   if pack[SP_SOCK+i]<=0 then col=2 end
-  print(string.format('%x',math.min(pack[SP_SOCK+i],15)),240/2+40+i*12+1+1,16-1-6+1,col)
+  print(string.format('%x',pack[SP_SOCK+i]),240/2+40+i*12+1+1,16-1-6+1,col)
   end
 
   print('Secret',32+32+16,6,11,false,3,true)
