@@ -354,25 +354,27 @@ function render_foreground()
   for i=#labels,1,-1 do
     local l=labels[i]
     local ly
+    local offx=0
+    if l.y==4 and l.x==8 then offx=-16 end
     if l.y==1 then ly=136/2-4 end
     if l.y==2 then ly=136/2-4+8-2 end
     if l.y==3 then ly=136/2-4+8+16-4-4 end
     if l.y==4 then ly=136/2-4+8+16+24-8-4 end
     for i=0,15 do pal(i,0) end
-    spr(l.id,(l.x-1)*(8*l.y)+l.y,ly-(t-l.t)*0.2*l.y,0,l.y)
-    spr(l.id,(l.x-1)*(8*l.y)-l.y,ly-(t-l.t)*0.2*l.y,0,l.y)
-    spr(l.id,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y+l.y,0,l.y)
-    spr(l.id,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y-l.y,0,l.y)
+    spr(l.id,(l.x-1)*(8*l.y)+offx+l.y,ly-(t-l.t)*0.2*l.y,0,l.y)
+    spr(l.id,(l.x-1)*(8*l.y)+offx-l.y,ly-(t-l.t)*0.2*l.y,0,l.y)
+    spr(l.id,(l.x-1)*(8*l.y)+offx,ly-(t-l.t)*0.2*l.y+l.y,0,l.y)
+    spr(l.id,(l.x-1)*(8*l.y)+offx,ly-(t-l.t)*0.2*l.y-l.y,0,l.y)
     pal()
-    spr(l.id,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y,0,l.y)
+    spr(l.id,(l.x-1)*(8*l.y)+offx,ly-(t-l.t)*0.2*l.y,0,l.y)
     if l.count==0 and (t-l.t)%20<10 then
       for i=0,15 do pal(i,0) end
-      spr(SP_CROSS,(l.x-1)*(8*l.y)+l.y,ly-(t-l.t)*0.2*l.y,0,l.y)
-      spr(SP_CROSS,(l.x-1)*(8*l.y)-l.y,ly-(t-l.t)*0.2*l.y,0,l.y)
-      spr(SP_CROSS,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y+l.y,0,l.y)
-      spr(SP_CROSS,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y-l.y,0,l.y)
+      spr(SP_CROSS,(l.x-1)*(8*l.y)+offx+l.y,ly-(t-l.t)*0.2*l.y,0,l.y)
+      spr(SP_CROSS,(l.x-1)*(8*l.y)+offx-l.y,ly-(t-l.t)*0.2*l.y,0,l.y)
+      spr(SP_CROSS,(l.x-1)*(8*l.y)+offx,ly-(t-l.t)*0.2*l.y+l.y,0,l.y)
+      spr(SP_CROSS,(l.x-1)*(8*l.y)+offx,ly-(t-l.t)*0.2*l.y-l.y,0,l.y)
       pal()
-      spr(SP_CROSS,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y,0,l.y)
+      spr(SP_CROSS,(l.x-1)*(8*l.y)+offx,ly-(t-l.t)*0.2*l.y,0,l.y)
     end
     if t-l.t>=80-1 then table.remove(labels,i) end
   end
