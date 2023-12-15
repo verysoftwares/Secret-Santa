@@ -84,7 +84,7 @@ function santa_input()
       gift=gift-1
       if gift<=0 then gift=nil end
       timer=maxtimer
-      sub_pack(SP_CANE)
+      add_pack(SP_CANE,-1)
     else
       table.insert(labels,{x=santax,y=santay,id=SP_CANE,count=0,t=t})
     end
@@ -94,7 +94,7 @@ function santa_input()
     if pack[SP_SOCK]>0 then
       santadx=-santadx
       timer=maxtimer
-      sub_pack(SP_SOCK)
+      add_pack(SP_SOCK,-1)
     else
       table.insert(labels,{x=santax,y=santay,id=SP_SOCK,count=0,t=t})
     end
@@ -111,12 +111,11 @@ function santa_parallax(dir)
     hilightx=santax; hilighty=santay
     santax=prevx; santay=santay-dir
   elseif step>=SP_SOCK and step<=SP_TREE then
-    pack[step]=pack[step]+1
-    --if step==88 then pack[step]=pack[step]+1 end
+    add_pack(step,1)
     lanes[santay][santax]=SP_EMPTY
-    sub_pack(SP_TREE)
+    add_pack(SP_TREE,-1)
   else
-    sub_pack(SP_TREE)
+    add_pack(SP_TREE,-1)
   end
 end
 
@@ -165,14 +164,13 @@ function santa_advance()
   if santax<1 then santax=#lanes[santay]; border=true end
   local step=lanes[santay][santax]
   if step==SP_GIFT then 
-    if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=83; santax=prevx; sub_pack(88)
+    if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=83; santax=prevx; add_pack(SP_CANE,-1)
     else hilightx=santax; hilighty=santay; santax=prevx end
   elseif step==SP_ELFL or step==SP_ELFR then
     hilightx=santax; hilighty=santay
     santax=prevx
   elseif step>=SP_SOCK and step<=SP_TREE then
-    pack[step]=pack[step]+1
-    --if step==88 then pack[step]=pack[step]+1 end
+    add_pack(step,1)
     lanes[santay][santax]=SP_EMPTY
   end
   if border and santax~=prevx then if gift then gift=gift-1; if gift<=0 then gift=nil; table.insert(labels,{x=santax,y=santay,id=SP_GIFT,count=0,t=t}) end end end
@@ -271,10 +269,16 @@ function gift_advance()
 end
 
 labels={}
-function sub_pack(i)
-  pack[i]=pack[i]-1
-  if pack[i]<0 then pack[i]=0 end
-  table.insert(labels,{x=santax,y=santay,id=i,count=pack[i],t=t})
+function add_pack(i,n)
+  pack[i]=pack[i]+n
+  if n>0 then
+    --if i==SP_CANE then pack[i]=pack[i]+1 end
+    if pack[i]>9 then pack[i]=9 end
+  end
+  if n<0 then
+    if pack[i]<0 then pack[i]=0 end
+    table.insert(labels,{x=santax,y=santay,id=i,count=pack[i],t=t})
+  end
 end
 
 function render_background()
@@ -415,7 +419,7 @@ function music2()
     sfx(1,12*4-tt//6%12+tt//2%16-tt//3%9,20,0)
   end
   if tt%36==0 then
-    sfx(1,12*4-tt//6%12+tt//2%16-tt//3%9,20,1)
+    sfx(1,12*4-tt//6%12+tt//2%16-tt//3%9,36,1)
   end
   if tt==18*8*9+18*2-1 then tt=-1 end
   tt=tt+1
