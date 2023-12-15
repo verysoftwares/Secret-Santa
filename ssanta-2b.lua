@@ -383,7 +383,9 @@ function render_foreground()
   -- item icons
   local offx=4
   local offy=1
-  local xdist=24
+  local xdist=18
+  rect(0,0,64+offx,10,2)
+  rect(64+6*xdist+offx-1,0,64+offx,10,7)
   for i,v in ipairs({SP_SANTA,SP_ELFR,SP_GIFT,SP_SOCK,SP_CANE,SP_TREE}) do
   rectb(64+(i-1)*xdist+offx-1,0,18,10,2+i-1)
   spr(v,64+(i-1)*xdist+offx,0+offy,0)
