@@ -40,7 +40,7 @@ for i=1,4 do
   end
 end
 pack={}
-for i=87,89 do
+for i=SP_SOCK,SP_TREE do
   pack[i]=4
 end
 
@@ -284,7 +284,7 @@ function gift_advance()
       spawn_item(giftshotx,giftshoty)
       table.insert(labels,{x=giftshotx,y=giftshoty,id=step,count=0,t=t})
     end
-    if (not elf) then
+    if not elf then
       lanes[giftshoty][giftshotx]=SP_EMPTY; 
     end
     if (not elf) or (not hit) then
