@@ -414,7 +414,7 @@ function render_foreground()
     end
   end
   
-  local offx=4
+  local offx=2
   local offy=5
   print('Secret',32+32+16+offx,6+offy,11,false,3,true)
   print('Santa 2023',32+32+16-32+8+8+offx,6+16+offy,11,false,2,true)
@@ -470,13 +470,15 @@ end
 
 function music2()
   tt=tt or 0
-  if (tt<18*8*4 and tt%18==0) or (tt>=18*8*4 and tt%12==0) then
+  rt=rt or 0
+  if (rt==0 and tt%18==0) or (tt<18*8*4 and tt%18==0) or (rt==1 and tt>=18*8*4 and tt%12==0) then
     sfx(1,12*4-tt//6%12+tt//2%16-tt//3%9,20,0)
   end
   if tt%36==0 then
     sfx(1,12*4-tt//6%12+tt//2%16-tt//3%9,36,1)
   end
-  if tt==18*8*9+18*2-1 then tt=-1 end
+  if tt==18*8*4+18*4-1 and rt==0 then tt=-1; rt=rt+1 end
+  if tt==18*8*9+18*4-1 then tt=-1; rt=0 end
   tt=tt+1
 end
 
