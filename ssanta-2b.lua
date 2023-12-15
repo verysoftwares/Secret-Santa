@@ -15,6 +15,7 @@ SP_SOCK=87
 SP_CANE=88
 SP_TREE=89
 SP_CLOUD=84
+SP_CROSS=72
 
 t=0
 x=96
@@ -366,12 +367,12 @@ function render_foreground()
     spr(l.id,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y,0,l.y)
     if l.count==0 and (t-l.t)%20<10 then
       for i=0,15 do pal(i,0) end
-      spr(72,(l.x-1)*(8*l.y)+l.y,ly-(t-l.t)*0.2*l.y,0,l.y)
-      spr(72,(l.x-1)*(8*l.y)-l.y,ly-(t-l.t)*0.2*l.y,0,l.y)
-      spr(72,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y+l.y,0,l.y)
-      spr(72,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y-l.y,0,l.y)
+      spr(SP_CROSS,(l.x-1)*(8*l.y)+l.y,ly-(t-l.t)*0.2*l.y,0,l.y)
+      spr(SP_CROSS,(l.x-1)*(8*l.y)-l.y,ly-(t-l.t)*0.2*l.y,0,l.y)
+      spr(SP_CROSS,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y+l.y,0,l.y)
+      spr(SP_CROSS,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y-l.y,0,l.y)
       pal()
-      spr(72,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y,0,l.y)
+      spr(SP_CROSS,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y,0,l.y)
     end
     if t-l.t>80 then table.remove(labels,i) end
   end
