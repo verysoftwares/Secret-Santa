@@ -23,6 +23,7 @@ y=24
 santax=1
 santay=4
 santadx=1
+santas=3
 
 lanes={
   {},
@@ -247,25 +248,63 @@ function elf_advance()
   end)
 end
 
+function elf_count()
+  local out=0
+  for i=1,4 do
+    for j,v in ipairs(lanes[i]) do
+      if v==SP_ELFL or v==SP_ELFR then out=out+1 end
+    end
+  end
+  return out
+end
+
+function gift_count()
+  local out=0
+  for i=1,4 do
+    for j,v in ipairs(lanes[i]) do
+      if v==SP_GIFT then out=out+1 end
+    end
+  end
+  if gift then out=out+gift end
+  if giftshotx then out=out+1 end
+  return out
+end
+
 function gift_advance()
   giftshotx=giftshotx+giftshotdx; 
   if giftshotx>#lanes[giftshoty] then giftshotx=1--giftshotx=nil; giftshoty=nil
   elseif giftshotx<1 then giftshotx=#lanes[giftshoty] end
   local step=lanes[giftshoty][giftshotx]
   if step~=SP_EMPTY then 
-    if (step~=SP_ELFL and step~=SP_ELFR) or ((step==SP_ELFL and giftshotdx>0) or (step==SP_ELFR and giftshotdx<0)) then
+    local elf= (step==SP_ELFL) or (step==SP_ELFR)
+    local hit=false
+    if elf then
+      hit= (step==SP_ELFL and giftshotdx>0) or (step==SP_ELFR and giftshotdx<0)
+    end
+    if elf and hit then
+      spawn_item(giftshotx,giftshoty)
+      table.insert(labels,{x=giftshotx,y=giftshoty,id=step,count=0,t=t})
+    end
+    if (not elf) then
       lanes[giftshoty][giftshotx]=SP_EMPTY; 
     end
+    if (not elf) or (not hit) then
+    table.insert(labels,{x=giftshotx,y=giftshoty,id=SP_GIFT,count=0,t=t})
     giftshotx=nil; giftshoty=nil; giftshotdx=nil
+    end
   elseif step==SP_EMPTY then 
-    local rng=math.random(1,10)
-    local item=0
-    if rng>=7 then item=88
-    elseif rng>=4 then item=89
-    elseif rng>=2 then item=87
-    else item=86 end
-    lanes[giftshoty][giftshotx]=item
+    spawn_item(giftshotx,giftshoty)
   end
+end
+
+function spawn_item(sx,sy)
+  local rng=math.random(1,10)
+  local item=0
+  if rng>=7 then item=88
+  elseif rng>=4 then item=89
+  elseif rng>=2 then item=87
+  else item=86 end
+  lanes[sy][sx]=item
 end
 
 labels={}
@@ -384,18 +423,26 @@ function render_foreground()
   end
 
   -- item icons
-  for i=0,3-1 do
-  rectb(240/2+40+i*12-1,0,10,16,12)
-  spr(SP_SOCK+i,240/2+40+i*12,1,0)
-  local col=12
-  if pack[SP_SOCK+i]<=0 then col=2 end
-  print(string.format('%x',pack[SP_SOCK+i]),240/2+40+i*12+1+1,16-1-6+1,col)
+  local offx=4
+  local offy=1
+  local xdist=24
+  for i,v in ipairs({SP_SANTA,SP_ELFR,SP_GIFT,SP_SOCK,SP_CANE,SP_TREE}) do
+  rectb(64+(i-1)*xdist+offx-1,0,18,10,12)
+  spr(v,64+(i-1)*xdist+offx,0+offy,0)
+  local count=0
+  if v==SP_SANTA then count=santas end
+  if v==SP_ELFR then count=elf_count() end
+  if v==SP_GIFT then count=gift_count() end
+  if v>=SP_SOCK and v<=SP_TREE then count=pack[v] end
+  print(string.format('%x',count),64+(i-1)*xdist+offx+10,1+offy,12)
   end
 
-  print('Secret',32+32+16,6,11,false,3,true)
-  print('Santa 2023',32+32+16-32+8+8,6+16,11,false,2,true)
-  print('2023',32+32+16-32+8+8+46-2,6+16,12,false,2,true)
-  print('by Leonard S.',32+32+16-32+8-16+2,6+16+16,12,false,1,true)
+  local offx=4
+  local offy=5
+  print('Secret',32+32+16+offx,6+offy,11,false,3,true)
+  print('Santa 2023',32+32+16-32+8+8+offx,6+16+offy,11,false,2,true)
+  print('2023',32+32+16-32+8+8+46-2+offx,6+16+offy,12,false,2,true)
+  print('by Leonard S.',32+32+16-32+8-16+2+offx,6+16+16,12,false,1,true)
 end
 
 function SCN(i)
