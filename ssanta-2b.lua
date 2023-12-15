@@ -380,6 +380,21 @@ function render_background()
 end
 
 function render_foreground()
+  -- item icons
+  local offx=4
+  local offy=1
+  local xdist=24
+  for i,v in ipairs({SP_SANTA,SP_ELFR,SP_GIFT,SP_SOCK,SP_CANE,SP_TREE}) do
+  rectb(64+(i-1)*xdist+offx-1,0,18,10,2+i-1)
+  spr(v,64+(i-1)*xdist+offx,0+offy,0)
+  local count=0
+  if v==SP_SANTA then count=santas end
+  if v==SP_ELFR then count=elf_count() end
+  if v==SP_GIFT then count=gift_count() end
+  if v>=SP_SOCK and v<=SP_TREE then count=pack[v] end
+  print(string.format('%x',math.min(count,15)),64+(i-1)*xdist+offx+10,1+offy,12)
+  end
+
   -- clouds
   for i=240,-8,-8 do
     if not (i>2 and i<60-16) then spr(SP_CLOUD,i+(t*0.125)%8,136/2-4-8-8,0) end
@@ -420,21 +435,6 @@ function render_foreground()
       spr(SP_CROSS,(l.x-1)*(8*l.y)+offx,ly-(t-l.t)*0.2*l.y,0,l.y)
     end
     if t-l.t>=80-1 then table.remove(labels,i) end
-  end
-
-  -- item icons
-  local offx=4
-  local offy=1
-  local xdist=24
-  for i,v in ipairs({SP_SANTA,SP_ELFR,SP_GIFT,SP_SOCK,SP_CANE,SP_TREE}) do
-  rectb(64+(i-1)*xdist+offx-1,0,18,10,12)
-  spr(v,64+(i-1)*xdist+offx,0+offy,0)
-  local count=0
-  if v==SP_SANTA then count=santas end
-  if v==SP_ELFR then count=elf_count() end
-  if v==SP_GIFT then count=gift_count() end
-  if v>=SP_SOCK and v<=SP_TREE then count=pack[v] end
-  print(string.format('%x',count),64+(i-1)*xdist+offx+10,1+offy,12)
   end
 
   local offx=4
