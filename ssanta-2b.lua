@@ -374,7 +374,7 @@ function render_foreground()
       pal()
       spr(SP_CROSS,(l.x-1)*(8*l.y),ly-(t-l.t)*0.2*l.y,0,l.y)
     end
-    if t-l.t>80 then table.remove(labels,i) end
+    if t-l.t>=80-1 then table.remove(labels,i) end
   end
 
   -- item icons
