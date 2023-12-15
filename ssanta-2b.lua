@@ -165,7 +165,7 @@ function santa_advance()
   local step=lanes[santay][santax]
   if step==SP_GIFT then 
     if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=83; santax=prevx; add_pack(SP_CANE,-1)
-    else hilightx=santax; hilighty=santay; santax=prevx end
+    else hilightx=santax; hilighty=santay; santax=prevx; if not gift and pack[SP_CANE]<=0 then table.insert(labels,{x=santax,y=santay,id=SP_CANE,count=0,t=t}) end end
   elseif step==SP_ELFL or step==SP_ELFR then
     hilightx=santax; hilighty=santay
     santax=prevx
