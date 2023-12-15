@@ -175,7 +175,7 @@ function santa_advance()
     --if step==88 then pack[step]=pack[step]+1 end
     lanes[santay][santax]=SP_EMPTY
   end
-  if border and santax~=prevx then if gift then gift=gift-1; if gift<=0 then gift=nil end end end
+  if border and santax~=prevx then if gift then gift=gift-1; if gift<=0 then gift=nil; table.insert(labels,{x=santax,y=santay,id=SP_GIFT,count=0,t=t}) end end end
 end
 
 function elf_advance()
