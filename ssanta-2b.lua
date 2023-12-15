@@ -309,12 +309,12 @@ function render_background()
         if gift then
         sp=SP_SANTAGIFT
         for i=0,15 do pal(i,0) end
-        spr(SP_GIFT,(j-1)*(8*i)+offx-i+i,ly-8*i,0,i)
-        spr(SP_GIFT,(j-1)*(8*i)+offx-i-i,ly-8*i,0,i)
-        spr(SP_GIFT,(j-1)*(8*i)+offx-i,ly-8*i+i,0,i)
-        spr(SP_GIFT,(j-1)*(8*i)+offx-i,ly-8*i-i,0,i)
+        spr(SP_GIFT,(j-1)*(8*i)+offx-i+i,ly-8*i-i,0,i)
+        spr(SP_GIFT,(j-1)*(8*i)+offx-i-i,ly-8*i-i,0,i)
+        spr(SP_GIFT,(j-1)*(8*i)+offx-i,ly-8*i-i+i,0,i)
+        spr(SP_GIFT,(j-1)*(8*i)+offx-i,ly-8*i-i-i,0,i)
         pal()
-        spr(SP_GIFT,(j-1)*(8*i)+offx-i,ly-8*i,0,i)
+        spr(SP_GIFT,(j-1)*(8*i)+offx-i,ly-8*i-i,0,i)
         end
       end
       if giftshoty==i and giftshotx==j then sp=SP_GIFT end
@@ -387,6 +387,7 @@ function render_foreground()
 
   print('Secret',32+32+16,6,11,false,3,true)
   print('Santa 2023',32+32+16-32+8+8,6+16,11,false,2,true)
+  print('2023',32+32+16-32+8+8+46-2,6+16,12,false,2,true)
   print('by Leonard S.',32+32+16-32+8-16+2,6+16+16,12,false,1,true)
 end
 
