@@ -60,9 +60,11 @@ function TIC()
 end
 
 function santa_input()
+  -- up to go further into the parallax
   if btnp(0) and santay>1 and pack[SP_TREE]>0 then
     santa_parallax(-1)
   end
+  -- down to get closer in the parallax
   if btnp(1) and santay<4 and pack[SP_TREE]>0 then 
     santa_parallax(1)
   end
