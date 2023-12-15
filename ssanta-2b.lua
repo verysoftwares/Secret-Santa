@@ -102,22 +102,22 @@ function santa_input()
 end
 
 function santa_parallax(dir)
-    local prevx=santax 
-    santax=parallax_shift(dir,santax,santay,santadx)
-    santay=santay+dir; 
-    timer=maxtimer; hilightx=nil; hilighty=nil 
-    local step=lanes[santay][santax]
-    if step==SP_ELFL or step==SP_ELFL or step==SP_GIFT then
-      hilightx=santax; hilighty=santay
-      santax=prevx; santay=santay-dir
-    elseif step>=SP_SOCK and step<=SP_TREE then
-      pack[step]=pack[step]+1
-      --if step==88 then pack[step]=pack[step]+1 end
-      lanes[santay][santax]=SP_EMPTY
-      sub_pack(SP_TREE)
-    else
-      sub_pack(SP_TREE)
-    end
+  local prevx=santax 
+  santax=parallax_shift(dir,santax,santay,santadx)
+  santay=santay+dir; 
+  timer=maxtimer; hilightx=nil; hilighty=nil 
+  local step=lanes[santay][santax]
+  if step==SP_ELFL or step==SP_ELFL or step==SP_GIFT then
+    hilightx=santax; hilighty=santay
+    santax=prevx; santay=santay-dir
+  elseif step>=SP_SOCK and step<=SP_TREE then
+    pack[step]=pack[step]+1
+    --if step==88 then pack[step]=pack[step]+1 end
+    lanes[santay][santax]=SP_EMPTY
+    sub_pack(SP_TREE)
+  else
+    sub_pack(SP_TREE)
+  end
 end
 
 function parallax_shift(dir,sx,sy,sdx)
