@@ -229,8 +229,7 @@ function elf_advance()
       if coll==SP_SANTA and not fail then
         fail=t
         table.insert(labels,{x=colli,y=i,id=SP_SANTA,count=0,t=t})
-      end
-      if coll==SP_EMPTY and lanes[i][colli]==SP_EMPTY then
+      elseif coll==SP_EMPTY and lanes[i][colli]==SP_EMPTY then
         -- you're good to walk forward!
         lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
         coroutine.yield()
