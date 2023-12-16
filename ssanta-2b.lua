@@ -47,12 +47,12 @@ end
 maxtimer=36
 timer=maxtimer
 
-function TIC()
+function ssanta()
   music2()
 
   santa_input()
   advance_timer()
-
+  
   render_background()
   render_foreground()
 
@@ -61,7 +61,11 @@ function TIC()
   --end
 end
 
+TIC=ssanta
+cls(0)
+
 function santa_input()
+  if not loaded then return end
   -- up to go further into the parallax
   if btnp(0) and santay>1 then
     if pack[SP_TREE]>0 then
@@ -133,6 +137,8 @@ end
 
 --t2=0
 function advance_timer()
+  if not loaded then return end
+		
   timer=timer-1
 
   if timer<=0 then
@@ -163,15 +169,23 @@ function advance_timer()
       for i=SP_SOCK,SP_TREE do pack[i]=4 end
       fail=nil
     else 
-      TIC=function() 
-        local tw=print('Game over',0,-6)
-        print('Game over',240/2-tw/2,136/2-3-8,2+t*0.06%6)
-        t=t+1
-      end 
+      TIC=infotext('Game over')
     end
   end
   
   --t2=t2+1
+end
+
+function infotext(msg)
+  return function() 
+    local tw=print(msg,0,-6)
+    print(msg,240/2-tw/2,136/2-3-8,2+t*0.06%6)
+    t=t+1
+    if btnp(4) then 
+    		TIC=ssanta
+      if msg=='Game over' then reset() end 
+    end
+  end
 end
 
 function santa_advance()
@@ -339,6 +353,7 @@ function add_pack(i,n)
 end
 
 function render_background()
+  local bg_cor=coroutine.create(function()
   cls(0)
 
   for i=1,4 do
@@ -350,6 +365,7 @@ function render_background()
     for j,v in ipairs(lanes[i]) do
       if v==SP_EMPTY then
       spr(v,(j-1)*(8*i),ly,0,i)
+      coroutine.yield()
       end
     end
     for j,v in ipairs(lanes[i]) do
@@ -392,12 +408,22 @@ function render_background()
       if hilightx==j and hilighty==i and v~=SP_EMPTY then for i=0,15 do pal(i,2) end end
       spr(sp,(j-1)*(8*i)+offx,ly,0,i,flip)
       pal()
+      coroutine.yield()
       end
     end
+  end
+  end)
+  local i=0
+  while i<t//2 do
+    if not coroutine.resume(bg_cor) then
+      loaded=true
+    end
+    i=i+1
   end
 end
 
 function render_foreground()
+  local fg_cor=coroutine.create(function()
   --line(0,56+2,240,56+2,8)
   --line(0,56+1+2,240,56+1+2,9)
   --line(0,56+1+4-1,240,56+1+4-1,8)
@@ -406,40 +432,46 @@ function render_foreground()
   local offx=4
   local offy=1
   local xdist=18
-  rect(0,0,64+offx,10,2)
-  rect(64+6*xdist+offx-1,0,64+offx,10,7)
   for i,v in ipairs({SP_SANTA,SP_ELFR,SP_GIFT,SP_SOCK,SP_CANE,SP_TREE}) do
+  if i==1 then rect(0,0,64+offx,10,2) end
+  if i==6 then rect(64+6*xdist+offx-1,0,64+offx,10,7) end
   rectb(64+(i-1)*xdist+offx-1,0,18,10,2+i-1)
   spr(v,64+(i-1)*xdist+offx,0+offy,0)
+  coroutine.yield()
   local count=0
   if v==SP_SANTA then count=santas end
   if v==SP_ELFR then count=elf_count() end
   if v==SP_GIFT then count=gift_count() end
   if v>=SP_SOCK and v<=SP_TREE then count=pack[v] end
   print(string.format('%x',math.min(count,15)),64+(i-1)*xdist+offx+10,1+offy,2+i-1)
+  coroutine.yield()
   end
 
   -- clouds
   for i=240,-8,-8 do
-    if not (i>2 and i<60-16) then spr(SP_CLOUD,i+(t*0.125)%8,136/2-4-8-8,0) end
+    if not (i>2 and i<60-16) then spr(SP_CLOUD,i+(t*0.125)%8,136/2-4-8-8,0); coroutine.yield() end
     if i<120+16 then
-    if not (i>2 and i<60-16) then spr(SP_CLOUD,i*2+(t*0.25)%16,136/2-4-8-2-8-8,0,2) end
+    if not (i>2 and i<60-16) then spr(SP_CLOUD,i*2+(t*0.25)%16,136/2-4-8-2-8-8,0,2); coroutine.yield() end
     end
     if i<80+24 then
-    if not (i>2 and i<60-16) then spr(SP_CLOUD,i*3+(t*0.5)%24,136/2-4-8-16-4-16,0,3) end
+    if not (i>2 and i<60-16) then spr(SP_CLOUD,i*3+(t*0.5)%24,136/2-4-8-16-4-16,0,3); coroutine.yield() end
     end
     if i<60+32 then
-    if not (i>2 and i<60-16) then spr(SP_CLOUD,i*4+(t)%32,136/2-4-8-16-24-8-4,0,4) end
+    if not (i>2 and i<60-16) then spr(SP_CLOUD,i*4+(t)%32,136/2-4-8-16-24-8-4,0,4); coroutine.yield() end
     end
   end
   
   local offx=2
   local offy=5
   print('Secret',32+32+16+offx,6+offy,11,false,3,true)
-  print('Santa 2023',32+32+16-32+8+8+offx,6+16+offy,11,false,2,true)
+  coroutine.yield()
+  print('Santa',32+32+16-32+8+8+offx,6+16+offy,11,false,2,true)
+  coroutine.yield()
   print('2023',32+32+16-32+8+8+46-2+offx,6+16+offy,12,false,2,true)
+  coroutine.yield()
   print('by Leonard S.',32+32+16-32+8-16+2+offx,6+16+16,12,false,1,true)
-
+  coroutine.yield()
+  
   for i=1,#labels do
     local l=labels[i]
     local ly
@@ -470,6 +502,14 @@ function render_foreground()
     local l=labels[i]
     if t-l.t>=80-1 then table.remove(labels,i) end
   end
+  end)
+  local i=0
+  while i<t//2 do
+    if not coroutine.resume(fg_cor) then
+      --loaded=true
+    end
+    i=i+1
+  end
 end
 
 function SCN(i)
@@ -499,6 +539,15 @@ function music2()
   if tt==18*8*4+18*4-1 and rt==0 then tt=-1; rt=rt+1 end
   if tt==18*8*9+18*4-1 then tt=-1; rt=0 end
   tt=tt+1
+end
+
+function music3()
+  if t%4==0 and t<4*4*8-4*2 then
+    sfx(1,12*3+t%15,6,0)
+  end
+  if t%6==0 and t>=4*4*8-4*2 then
+    sfx(1,12*3+t%15*2,6,0)
+  end
 end
 
 -- palette swapping by borbware
