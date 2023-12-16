@@ -156,10 +156,26 @@ function advance_timer()
 
   if timer<8 then hilightx=nil; hilighty=nil end
   
+  if fail and t-fail==80 then
+    santas=santas-1
+    if santas>0 then
+      santax=1; santay=4; santadx=1; gift=nil
+      for i=SP_SOCK,SP_TREE do pack[i]=4 end
+      fail=nil
+    else 
+      TIC=function() 
+        local tw=print('Game over',0,-6)
+        print('Game over',240/2-tw/2,136/2-3-8,2+t*0.06%6)
+        t=t+1
+      end 
+    end
+  end
+  
   --t2=t2+1
 end
 
 function santa_advance()
+  if fail then return end
   local prevx=santax; santax=santax+santadx; local border=false
   if santax>=240/8/santay+1 then santax=1; border=true end
   if santax<1 then santax=#lanes[santay]; border=true end
@@ -210,6 +226,10 @@ function elf_advance()
       end
       coll=old_lanes[i][colli] 
       
+      if coll==SP_SANTA and not fail then
+        fail=t
+        table.insert(labels,{x=colli,y=i,id=SP_SANTA,count=0,t=t})
+      end
       if coll==SP_EMPTY and lanes[i][colli]==SP_EMPTY then
         -- you're good to walk forward!
         lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
@@ -346,7 +366,7 @@ function render_background()
       if i==santay+1 and j==parallax_shift(1,santax,santay,santadx) then
         --rect((j-1)*(8*i)+offx,ly,i*8,i*8,5)
       end
-      if i==santay and j==santax then 
+      if not fail and i==santay and j==santax then 
         if v==SP_GIFT and not gift then lanes[i][j]=SP_EMPTY; gift=1 end
         sp=SP_SANTA 
         if gift then
