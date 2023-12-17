@@ -349,7 +349,7 @@ function nextlevel()
   for i=SP_SOCK,SP_TREE do pack[i]=4 end
   gift=nil; giftshotx=nil; giftshoty=nil; giftshotdx=nil
   if lvl>4 then
-  TIC=credits
+  TIC=credits; tt2=0
   else
   generate(); TIC=modal; t=-1; tt2=0
   end
