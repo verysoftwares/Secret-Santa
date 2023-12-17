@@ -68,6 +68,10 @@ function santa_input()
   if not loaded then return end
   -- up to go further into the parallax
   if btnp(0) and santay>1 then
+    if pmem(3)==0 and not info3 then
+      TIC=infotext('Moving vertically consumes Christmas trees.')
+      info3=true
+    end
     if pack[SP_TREE]>0 then
       santa_parallax(-1)
     else
@@ -76,6 +80,10 @@ function santa_input()
   end
   -- down to get closer in the parallax
   if btnp(1) and santay<4 then 
+    if pmem(3)==0 and not info3 then
+      TIC=infotext('Moving vertically consumes Christmas trees.')
+      info3=true
+    end
     if pack[SP_TREE]>0 then
       santa_parallax(1)
     else
@@ -96,6 +104,10 @@ function santa_input()
   end
   -- turn with X or arrows
   if (btnp(5) or (santadx>0 and btnp(2)) or (santadx<0 and btnp(3))) then
+    if pmem(4)==0 and not info4 then
+      TIC=infotext('Turning around consumes wooly socks.')
+      info4=true
+    end
     if pack[SP_SOCK]>0 then
       santadx=-santadx
       timer=maxtimer
@@ -180,6 +192,12 @@ function advance_timer()
   elseif info0 and pmem(2)==0 and not info2 then
     TIC=infotext('While Santa moves, help him with arrow keys.')
     info2=true
+  elseif TIC==ssanta and (info3 or info4 or info6) and pmem(5)==0 and (not info5) then
+    TIC=infotext('Keep an eye out for resources at the top.')
+    info5=true
+  elseif TIC==ssanta and info6 and pmem(7)==0 and not info7 then
+    TIC=infotext('You can throw gifts with Z!')
+    info7=true
   end
   
   --t2=t2+1
@@ -233,7 +251,7 @@ function santa_advance()
   if santax<1 then santax=#lanes[santay]; border=true end
   local step=lanes[santay][santax]
   if step==SP_GIFT then 
-    if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=SP_EMPTY; santax=prevx; add_pack(SP_CANE,-1)
+    if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=SP_EMPTY; santax=prevx; add_pack(SP_CANE,-1); if pmem(6)==0 and not info6 then TIC=infotext('Picking up gifts consumes candy canes.'); info6=true end
     else hilightx=santax; hilighty=santay; santax=prevx; if not gift and pack[SP_CANE]<=0 then table.insert(labels,{x=santax,y=santay,id=SP_CANE,count=0,t=t}) end end
   elseif step==SP_ELFL or step==SP_ELFR then
     hilightx=santax; hilighty=santay
@@ -358,6 +376,16 @@ function gift_advance()
     if elf and hit then
       spawn_item(giftshotx,giftshoty)
       table.insert(labels,{x=giftshotx,y=giftshoty,id=step,count=0,t=t})
+      if pmem(8)==0 and not info8 then
+        TIC=infotext('Nice, you hit an elf! Get \'em all!')
+        info8=true
+      end
+    end
+    if elf and not hit then
+      if pmem(9)==0 and not info9 then
+        TIC=infotext('Elves can\'t be hit from behind.')
+        info9=true
+      end
     end
     if not elf then
       lanes[giftshoty][giftshotx]=SP_EMPTY; 
