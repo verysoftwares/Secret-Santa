@@ -690,12 +690,17 @@ end
 function credits()
   cls(0)
   music3()
-		
+
+  local pos={}		
   for sp=SP_GIFT,SP_TREE do
     local a=t*0.065+(sp-SP_GIFT)*1.5
-    if (sp==SP_GIFT or sp==SP_SOCK or sp==SP_CANE) and a%(2*math.pi)<math.pi then spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8,0,4) end
-    spr(sp,240/2-12+math.cos(a)*48,136/2-40+math.sin(t*0.1+(sp-SP_GIFT)*1.5)*24,0,4)
-    if (sp==SP_TREE) and a%(2*math.pi)<math.pi then spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8,0,4) end
+    table.insert(pos,{sp,a})
+  end
+  table.sort(pos,function(a,b) return a[2]%(2*math.pi)<b[2]%(2*math.pi) end)
+  for i,v in ipairs(pos) do
+    local sp=v[1]
+    spr(sp,240/2-12+math.cos(v[2])*48,136/2-40+math.sin(t*0.1+(sp-SP_GIFT)*1.5)*18+2,0,4)
+    if v[2]%(2*math.pi)<math.pi then spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8,0,4) end
   end
   
   local tx=0
@@ -706,7 +711,7 @@ function credits()
     tx=tx+print(string.sub(msg,i,i),240/2-tw/2+tx,0,11,false,2,false)
   end
   msg='Game by Leonard Somero. This is my 20th\nreleased game this year! 2023 has been\ncrazy, I started my own game company\nand am now making games full-time. :)\n\nWishing you the best of Xmas from Oulu,\nFinland. Greets to all you fine folks at\nthe Secret Santa Jam Discord.'
-  print(string.sub(msg,1,math.max(0,(mt-8*14)//2)),12,136/2+16,11)
+  print(string.sub(msg,1,math.max(0,(mt-8*16)//2)),12,136/2+16,11)
   mt=mt+1
 		
   if btnp(4) then reset() end
