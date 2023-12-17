@@ -4,6 +4,7 @@
 -- site:    https://verysoftwares.itch.io
 -- license: MIT
 -- script:  lua
+-- saveid:  1SSANTA
 
 SP_ELFL=81
 SP_ELFR=SP_ELFL-16
@@ -250,6 +251,7 @@ end
 
 t3=0
 function infotext(msg)
+  if msg~='Game over' and msg~='You win!' then sfx(3,'A-6',30,2) end
   return function() 
     if msg~='Game over' and msg~='You win!' then music2() end
     
@@ -297,7 +299,7 @@ function santa_advance()
   if santax<1 then santax=#lanes[santay]; border=true end
   local step=lanes[santay][santax]
   if step==SP_GIFT then 
-    if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=SP_EMPTY; santax=prevx; add_pack(SP_CANE,-1); if pmem(6)==0 and not info6 then TIC=infotext('Picking up gifts consumes candy canes.'); info6=true end
+    if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=SP_EMPTY; santax=prevx; add_pack(SP_CANE,-1); if pmem(6)==0 and not info6 then TIC=infotext('Picking up gifts consumes candy canes.'); info6=true end; sfx(6,'D-5',30,3)
     else hilightx=santax; hilighty=santay; santax=prevx; if not gift and pack[SP_CANE]<=0 then table.insert(labels,{x=santax,y=santay,id=SP_CANE,count=0,t=t}) end end
   elseif step==SP_ELFL or step==SP_ELFR then
     hilightx=santax; hilighty=santay
@@ -305,6 +307,7 @@ function santa_advance()
   elseif step>=SP_SOCK and step<=SP_TREE then
     add_pack(step,1)
     lanes[santay][santax]=SP_EMPTY
+    sfx(7,'A-4',10,3)
   end
   if border and santax~=prevx then if gift then gift=gift-1; if gift<=0 then gift=nil; table.insert(labels,{x=santax,y=santay,id=SP_GIFT,count=0,t=t}); if pmem(10)==0 and not info10 then TIC=infotext('You can\'t wrap gifts around the screen.'); info10=true end end end end
 end
@@ -349,6 +352,7 @@ function elf_advance()
           info1=true
         end
         table.insert(labels,{x=colli,y=i,id=SP_SANTA,count=0,t=t})
+        sfx(8,'A-3',30,3)
       elseif coll==SP_EMPTY and lanes[i][colli]==SP_EMPTY then
         -- you're good to walk forward!
         lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
@@ -410,6 +414,7 @@ end
 
 function gift_advance()
   giftshotx=giftshotx+giftshotdx; 
+  sfx(5,'D-4',30,3)
   if giftshotx>#lanes[giftshoty] then giftshotx=1--giftshotx=nil; giftshoty=nil
   elseif giftshotx<1 then giftshotx=#lanes[giftshoty] end
   local step=lanes[giftshoty][giftshotx]
@@ -750,11 +755,19 @@ end
 -- 000:00000000ffffffff00000000ffffffff
 -- 001:0123456789abcdeffedcba9876543210
 -- 002:0123456789abcdef0123456789abcdef
+-- 004:009bbddeeff899aaaa00000000000000
 -- </WAVES>
 
 -- <SFX>
 -- 000:000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000304000000000
 -- 001:010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100010001000100000000000000
+-- 002:046004d10403040304040404040404040404040504050406040704070407040704070400040004000400040004000400040004000400040004000400b09000000300
+-- 003:040004300460049004d00400040004000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400d49000000000
+-- 004:04000400040f040e040c0409040804000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400a09000000000
+-- 005:0400040c0408040004000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400b42000000021
+-- 006:049004300490043004000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400452000000400
+-- 007:0400049004e0040004000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400309000000300
+-- 008:0400f4000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400269000000000
 -- </SFX>
 
 -- <PATTERNS>
