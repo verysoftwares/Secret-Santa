@@ -691,13 +691,13 @@ function credits()
   
   local tx=0
   local msg='-=* Credits *=-'
+  mt=mt or 0
   local tw=print(msg,0,-6*2,0,false,2,false)
-  for i=1,#msg do
+  for i=1,math.min(mt//8,#msg) do
     tx=tx+print(string.sub(msg,i,i),240/2-tw/2+tx,0,11,false,2,false)
   end
   msg='Game by Leonard Somero. This is my 20th\nreleased game this year! 2023 has been\ncrazy, I started my own game company\nand am now making games full-time. :)\n\nWishing you the best of Xmas from Oulu,\nFinland. Greets to all you fine folks at\nthe Secret Santa Jam Discord.'
-  mt=mt or 0
-  print(string.sub(msg,1,mt//2),12,136/2+16,11)
+  print(string.sub(msg,1,math.max(0,(mt-8*14)//2)),12,136/2+16,11)
   mt=mt+1
 		
   if btnp(4) then reset() end
