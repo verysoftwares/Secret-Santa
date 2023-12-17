@@ -50,11 +50,8 @@ for i=1,4 do
   while c<4-i do
     repeat
     rpos=math.random(1,math.floor(240/8/i+0.5))
-    until not lanes[i][rpos] and not (i==4 and rpos==1)
+    until not lanes[i][rpos] and not (i==santay and rpos==santax)
     lanes[i][rpos]=SP_ELFR+math.random(0,1)*16
-    -- no instakills
-    if i==4 and rpos==2 and lanes[i][rpos]==SP_ELFL then lanes[i][rpos]=SP_ELFR end
-    if i==4 and rpos==8 and lanes[i][rpos]==SP_ELFR then lanes[i][rpos]=SP_ELFL end
     c=c+1
   end
 
@@ -64,7 +61,7 @@ for i=1,4 do
   while c<4-i+1 do
     repeat
     rpos=math.random(1,math.floor(240/8/i+0.5))
-    until not lanes[i][rpos] and not (i==4 and rpos==1)
+    until not lanes[i][rpos] and not (i==santay and rpos==santax)
     lanes[i][rpos]=SP_GIFT
     c=c+1
   end
@@ -153,7 +150,7 @@ function santa_parallax(dir)
   santay=santay+dir; 
   timer=maxtimer; hilightx=nil; hilighty=nil 
   local step=lanes[santay][santax]
-  if step==SP_ELFL or step==SP_ELFL then
+  if step==SP_ELFL or step==SP_ELFR then
     hilightx=santax; hilighty=santay
     santax=prevx; santay=santay-dir
     return false
@@ -249,7 +246,7 @@ function global_timer_events()
     TIC=infotext('Keep an eye out for resources at the top.')
     info5=true
   elseif TIC==ssanta and info6 and pmem(7)==0 and not info7 then
-    TIC=infotext('You can throw gifts with Z!')
+    TIC=infotext('Oh, and you can throw gifts with Z!')
     info7=true
   end
   
