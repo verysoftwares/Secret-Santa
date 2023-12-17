@@ -301,7 +301,7 @@ function santa_advance()
     add_pack(step,1)
     lanes[santay][santax]=SP_EMPTY
   end
-  if border and santax~=prevx then if gift then gift=gift-1; if gift<=0 then gift=nil; table.insert(labels,{x=santax,y=santay,id=SP_GIFT,count=0,t=t}) end end end
+  if border and santax~=prevx then if gift then gift=gift-1; if gift<=0 then gift=nil; table.insert(labels,{x=santax,y=santay,id=SP_GIFT,count=0,t=t}); if pmem(10)==0 and not info10 then TIC=infotext('You can\'t wrap gifts around the screen.'); info10=true end end end end
 end
 
 function elf_advance()
