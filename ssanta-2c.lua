@@ -266,7 +266,8 @@ function infotext(msg)
 
     if btnp(4) then 
       TIC=ssanta
-      if msg=='Game over' or msg=='You win!' then reset() end 
+      if msg=='Game over' then reset() end 
+      if msg=='You win!' then TIC=credits end 
     end
   end
 end
@@ -663,13 +664,47 @@ function music2()
 end
 
 function music3()
-  if t%4==0 and t<4*4*8-4*2 then
-    sfx(1,12*3+t%15,6,0)
+  tt2=tt2 or 0
+  if tt2%4==0 and tt2<4*4*8-4*2 then
+    sfx(1,12*3+tt2%15,6,0)
   end
-  if t%6==0 and t>=4*4*8-4*2 then
-    sfx(1,12*3+t%15*2,6,0)
+  if tt2%6==0 and tt2>=4*4*8-4*2 and tt2<4*4*8-4*2+6*8*36 then
+    sfx(1,12*3+tt2%20+tt2%22,6,0)
   end
+  if tt2%7==0 and tt2>=4*4*8-4*2+6*8*36 then
+    sfx(1,12*3+(tt2-6*8*36)%20+(tt2-6*8*36)%22,6,0)
+  end
+  if tt2==4*4*8-4*2+6*8*36+7*8*16+7*8*8-1 then tt2=-1 end
+  tt2=tt2+1
 end
+
+function credits()
+  cls(0)
+  music3()
+		
+  for sp=SP_GIFT,SP_TREE do
+    local a=t*0.065+(sp-SP_GIFT)*1.5
+    if (sp==SP_GIFT or sp==SP_SOCK or sp==SP_CANE) and a%(2*math.pi)<math.pi then spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8,0,4) end
+    spr(sp,240/2-12+math.cos(a)*48,136/2-40+math.sin(t*0.1+(sp-SP_GIFT)*1.5)*24,0,4)
+    if (sp==SP_TREE) and a%(2*math.pi)<math.pi then spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8,0,4) end
+  end
+  
+  local tx=0
+  local msg='-=* Credits *=-'
+  local tw=print(msg,0,-6*2,0,false,2,false)
+  for i=1,#msg do
+    tx=tx+print(string.sub(msg,i,i),240/2-tw/2+tx,0,11,false,2,false)
+  end
+  msg='Game by Leonard Somero. This is my 20th\nreleased game this year! 2023 has been\ncrazy, I started my own game company\nand am now making games full-time. :)\n\nWishing you the best of Xmas from Oulu,\nFinland. Greets to all you fine folks at\nthe Secret Santa Jam Discord.'
+  mt=mt or 0
+  print(string.sub(msg,1,mt//2),12,136/2+16,11)
+  mt=mt+1
+		
+  if btnp(4) then reset() end
+		
+  t=t+1
+end
+--TIC=credits
 
 -- palette swapping by borbware
   function pal(c0,c1)
