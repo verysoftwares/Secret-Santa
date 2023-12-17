@@ -677,13 +677,13 @@ function music3()
   if tt2%4==0 and tt2<4*4*8-4*2 then
     sfx(1,12*3+tt2%15,6,0)
   end
-  if tt2%6==0 and tt2>=4*4*8-4*2 and tt2<4*4*8-4*2+6*8*36 then
+  if tt2%6==0 and tt2>=4*4*8-4*2 and tt2<4*4*8-4*2+6*8*24 then
     sfx(1,12*3+tt2%20+tt2%22,6,0)
   end
-  if tt2%7==0 and tt2>=4*4*8-4*2+6*8*36 then
-    sfx(1,12*3+(tt2-6*8*36)%20+(tt2-6*8*36)%22,6,0)
+  if tt2%7==0 and tt2>=4*4*8-4*2+6*8*24 then
+    sfx(1,12*3+(tt2-6*8*24)%20+(tt2-6*8*24)%22,6,0)
   end
-  if tt2==4*4*8-4*2+6*8*36+7*8*16+7*8*8-1 then tt2=-1 end
+  if tt2==4*4*8-4*2+6*8*24+7*8*16-1 then tt2=-1 end
   tt2=tt2+1
 end
 
@@ -700,7 +700,7 @@ function credits()
   for i,v in ipairs(pos) do
     local sp=v[1]
     spr(sp,240/2-12+math.cos(v[2])*48,136/2-40+math.sin(t*0.1+(sp-SP_GIFT)*1.5)*18+2,0,4)
-    if v[2]%(2*math.pi)<math.pi then spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8,0,4) end
+    if v[2]%(2*math.pi)<math.pi then spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8+2,0,4) end
   end
   
   local tx=0
