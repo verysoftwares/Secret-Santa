@@ -211,6 +211,12 @@ function advance_timer()
 
   if timer<8 then hilightx=nil; hilighty=nil end
   
+  global_timer_events()
+  
+  --t2=t2+1
+end
+
+function global_timer_events()
   if fail and t-fail==80 then
     santas=santas-1
     if santas>0 then
@@ -240,8 +246,6 @@ function advance_timer()
   if elf_count()==0 then
     TIC=infotext('You win!')
   end
-  
-  --t2=t2+1
 end
 
 t3=0
