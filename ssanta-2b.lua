@@ -173,19 +173,57 @@ function advance_timer()
     end
   end
   
+  if pmem(0)==0 and loaded and not info0 then
+    TIC=infotext('Merry Xmas! Press Z to advance these hints.')
+    --pmem(0,1)
+    info0=true
+  elseif info0 and pmem(2)==0 and not info2 then
+    TIC=infotext('While Santa moves, help him with arrow keys.')
+    info2=true
+  end
+  
   --t2=t2+1
 end
 
+t3=0
 function infotext(msg)
   return function() 
+    music2()
+    
     local tw=print(msg,0,-6)
-    print(msg,240/2-tw/2,136/2-3-8,2+t*0.06%6)
-    t=t+1
+    print(msg,240/2-tw/2,136/2-3-8,2+t3*0.06%6)
+    t3=t3+1
+
+    -- originally I redrew Santa here,
+    -- but he overlapped with SP_EMPTYs,
+    -- and only the gift can overlap infotext anyway.
+    if msg~='Game over' then santa_gift_draw() end
+
+    label_draw()
+
     if btnp(4) then 
-    		TIC=ssanta
+      TIC=ssanta
       if msg=='Game over' then reset() end 
     end
   end
+end
+
+function santa_gift_draw()
+  if not gift then return end
+  local ly
+  if santay==1 then ly=136/2-4 end
+  if santay==2 then ly=136/2-4+8-2 end
+  if santay==3 then ly=136/2-4+8+16-4-4 end
+  if santay==4 then ly=136/2-4+8+16+24-8-4 end
+  local offx=0
+  local j,i=santax,santay
+  for i=0,15 do pal(i,0) end
+  spr(SP_GIFT,(j-1)*(8*i)+offx-i+i,ly-8*i-i,0,i)
+  spr(SP_GIFT,(j-1)*(8*i)+offx-i-i,ly-8*i-i,0,i)
+  spr(SP_GIFT,(j-1)*(8*i)+offx-i,ly-8*i-i+i,0,i)
+  spr(SP_GIFT,(j-1)*(8*i)+offx-i,ly-8*i-i-i,0,i)
+  pal()
+  spr(SP_GIFT,(j-1)*(8*i)+offx-i,ly-8*i-i,0,i)
 end
 
 function santa_advance()
@@ -242,6 +280,10 @@ function elf_advance()
       
       if coll==SP_SANTA and not fail then
         fail=t
+        if pmem(1)==0 and not info1 then
+          TIC=infotext('Don\'t let the elves catch you!')
+          info1=true
+        end
         table.insert(labels,{x=colli,y=i,id=SP_SANTA,count=0,t=t})
       elseif coll==SP_EMPTY and lanes[i][colli]==SP_EMPTY then
         -- you're good to walk forward!
@@ -416,7 +458,8 @@ function render_background()
   local i=0
   while i<t//2 do
     if not coroutine.resume(bg_cor) then
-      loaded=true
+      --loaded=true
+      break
     end
     i=i+1
   end
@@ -472,6 +515,23 @@ function render_foreground()
   print('by Leonard S.',32+32+16-32+8-16+2+offx,6+16+16,12,false,1,true)
   coroutine.yield()
   
+  label_draw()
+  for i=#labels,1,-1 do
+    local l=labels[i]
+    if t-l.t>=80-1 then table.remove(labels,i) end
+  end
+  end)
+  local i=0
+  while i<t//2 do
+    if not coroutine.resume(fg_cor) then
+      loaded=true
+      break
+    end
+    i=i+1
+  end
+end
+
+function label_draw()
   for i=1,#labels do
     local l=labels[i]
     local ly
@@ -497,18 +557,6 @@ function render_foreground()
       pal()
       spr(SP_CROSS,(l.x-1)*(8*l.y)+offx,ly-(t-l.t)*0.2*l.y,0,l.y)
     end
-  end
-  for i=#labels,1,-1 do
-    local l=labels[i]
-    if t-l.t>=80-1 then table.remove(labels,i) end
-  end
-  end)
-  local i=0
-  while i<t//2 do
-    if not coroutine.resume(fg_cor) then
-      --loaded=true
-    end
-    i=i+1
   end
 end
 
