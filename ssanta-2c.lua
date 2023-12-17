@@ -164,6 +164,7 @@ function santa_parallax(dir)
   elseif pack[SP_TREE]>0 and step>=SP_SOCK and step<=SP_TREE then
     add_pack(step,1)
     lanes[santay][santax]=SP_EMPTY
+    sfx(7,'A-4',10,3)
     add_pack(SP_TREE,-1)
   elseif pack[SP_TREE]>0 then
     add_pack(SP_TREE,-1)
@@ -229,6 +230,7 @@ function global_timer_events()
       if step>=SP_SOCK and step<=SP_TREE then
         add_pack(step,1)
         lanes[santay][santax]=SP_EMPTY
+        sfx(7,'A-4',10,3)
       end
       fail=nil
     else 
