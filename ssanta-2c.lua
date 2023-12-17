@@ -167,6 +167,7 @@ function santa_parallax(dir)
   elseif pack[SP_TREE]>0 then
     add_pack(SP_TREE,-1)
   else
+    hilightx=santax; hilighty=santay
     santax=prevx; santay=santay-dir
     table.insert(labels,{x=santax,y=santay,id=SP_TREE,count=0,t=t})
     return false
