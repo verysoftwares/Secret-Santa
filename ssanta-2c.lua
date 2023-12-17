@@ -160,9 +160,13 @@ function santa_parallax(dir)
   santay=santay+dir; 
   timer=maxtimer; hilightx=nil; hilighty=nil 
   local step=lanes[santay][santax]
-  if step==SP_ELFL or step==SP_ELFL or step==SP_GIFT then
+  if step==SP_ELFL or step==SP_ELFL then
     hilightx=santax; hilighty=santay
     santax=prevx; santay=santay-dir
+    return false
+  elseif step==SP_GIFT then
+    if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=SP_EMPTY; santax=prevx; santay=santay-dir; add_pack(SP_CANE,-1); if pmem(6)==0 and not info6 then TIC=infotext('Picking up gifts consumes candy canes.'); info6=true end; sfx(6,'D-5',30,3)
+    else hilightx=santax; hilighty=santay; santax=prevx; santay=santay-dir; if not gift and pack[SP_CANE]<=0 then table.insert(labels,{x=santax,y=santay,id=SP_CANE,count=0,t=t}) end end
     return false
   elseif step>=SP_SOCK and step<=SP_TREE then
     add_pack(step,1)
