@@ -104,26 +104,18 @@ function santa_input()
   if not loaded then return end
   -- up to go further into the parallax
   if btnp(0) and santay>1 then
-    if pack[SP_TREE]>0 then
-      local moved=santa_parallax(-1)
-      if moved and pmem(3)==0 and not info3 then
-        TIC=infotext('Moving vertically consumes Christmas trees.')
-        info3=true
-      end
-    else
-      table.insert(labels,{x=santax,y=santay,id=SP_TREE,count=0,t=t})
+    local moved=santa_parallax(-1)
+    if moved and pmem(3)==0 and not info3 then
+      TIC=infotext('Moving vertically consumes Christmas trees.')
+      info3=true
     end
   end
   -- down to get closer in the parallax
   if btnp(1) and santay<4 then 
-    if pack[SP_TREE]>0 then
-      local moved=santa_parallax(1)
-      if moved and pmem(3)==0 and not info3 then
-        TIC=infotext('Moving vertically consumes Christmas trees.')
-        info3=true
-      end
-    else
-      table.insert(labels,{x=santax,y=santay,id=SP_TREE,count=0,t=t})
+    local moved=santa_parallax(1)
+    if moved and pmem(3)==0 and not info3 then
+      TIC=infotext('Moving vertically consumes Christmas trees.')
+      info3=true
     end
   end
   -- throw with Z
@@ -168,12 +160,16 @@ function santa_parallax(dir)
     if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=SP_EMPTY; santax=prevx; santay=santay-dir; add_pack(SP_CANE,-1); if pmem(6)==0 and not info6 then TIC=infotext('Picking up gifts consumes candy canes.'); info6=true end; sfx(6,'D-5',30,3)
     else hilightx=santax; hilighty=santay; santax=prevx; santay=santay-dir; if not gift and pack[SP_CANE]<=0 then table.insert(labels,{x=santax,y=santay,id=SP_CANE,count=0,t=t}) end end
     return false
-  elseif step>=SP_SOCK and step<=SP_TREE then
+  elseif pack[SP_TREE]>0 and step>=SP_SOCK and step<=SP_TREE then
     add_pack(step,1)
     lanes[santay][santax]=SP_EMPTY
     add_pack(SP_TREE,-1)
-  else
+  elseif pack[SP_TREE]>0 then
     add_pack(SP_TREE,-1)
+  else
+    santax=prevx; santay=santay-dir
+    table.insert(labels,{x=santax,y=santay,id=SP_TREE,count=0,t=t})
+    return false
   end
   return true
 end
