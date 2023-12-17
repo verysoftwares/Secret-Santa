@@ -784,8 +784,22 @@ function credits()
   table.sort(pos,function(a,b) return a[2]%(2*math.pi)<b[2]%(2*math.pi) end)
   for i,v in ipairs(pos) do
     local sp=v[1]
+    for i=0,15 do pal(i,0) end
+    spr(sp,240/2-12+math.cos(v[2])*48+4,136/2-40+math.sin(t*0.1+(sp-SP_GIFT)*1.5)*18+2,0,4)
+    spr(sp,240/2-12+math.cos(v[2])*48-4,136/2-40+math.sin(t*0.1+(sp-SP_GIFT)*1.5)*18+2,0,4)
+    spr(sp,240/2-12+math.cos(v[2])*48,136/2-40+math.sin(t*0.1+(sp-SP_GIFT)*1.5)*18+2+4,0,4)
+    spr(sp,240/2-12+math.cos(v[2])*48,136/2-40+math.sin(t*0.1+(sp-SP_GIFT)*1.5)*18+2-4,0,4)
+    pal()
     spr(sp,240/2-12+math.cos(v[2])*48,136/2-40+math.sin(t*0.1+(sp-SP_GIFT)*1.5)*18+2,0,4)
-    if v[2]%(2*math.pi)<math.pi then spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8+2,0,4) end
+    if v[2]%(2*math.pi)<math.pi then 
+    for i=0,15 do pal(i,0) end
+    spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2+4,136/2-32-8+2,0,4) 
+    spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2-4,136/2-32-8+2,0,4) 
+    spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8+2+4,0,4) 
+    spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8+2-4,0,4)
+    pal()
+    spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8+2,0,4) 
+    end
   end
   
   local tx=0
