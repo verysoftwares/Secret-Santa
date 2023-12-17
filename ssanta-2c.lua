@@ -74,6 +74,7 @@ for i=1,4 do
     if not lanes[i][j] then lanes[i][j]=SP_EMPTY end
   end
 end
+
 pack={}
 for i=SP_SOCK,SP_TREE do
   pack[i]=4
@@ -224,6 +225,11 @@ function global_timer_events()
     if santas>0 then
       santax=1; santay=4; santadx=1; gift=nil
       for i=SP_SOCK,SP_TREE do pack[i]=4 end
+      local step=lanes[santay][santax]
+      if step>=SP_SOCK and step<=SP_TREE then
+        add_pack(step,1)
+        lanes[santay][santax]=SP_EMPTY
+      end
       fail=nil
     else 
       TIC=infotext('Game over')
