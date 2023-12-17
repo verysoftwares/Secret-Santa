@@ -68,24 +68,24 @@ function santa_input()
   if not loaded then return end
   -- up to go further into the parallax
   if btnp(0) and santay>1 then
-    if pmem(3)==0 and not info3 then
-      TIC=infotext('Moving vertically consumes Christmas trees.')
-      info3=true
-    end
     if pack[SP_TREE]>0 then
-      santa_parallax(-1)
+      local moved=santa_parallax(-1)
+      if moved and pmem(3)==0 and not info3 then
+        TIC=infotext('Moving vertically consumes Christmas trees.')
+        info3=true
+      end
     else
       table.insert(labels,{x=santax,y=santay,id=SP_TREE,count=0,t=t})
     end
   end
   -- down to get closer in the parallax
   if btnp(1) and santay<4 then 
-    if pmem(3)==0 and not info3 then
-      TIC=infotext('Moving vertically consumes Christmas trees.')
-      info3=true
-    end
     if pack[SP_TREE]>0 then
-      santa_parallax(1)
+      local moved=santa_parallax(1)
+      if moved and pmem(3)==0 and not info3 then
+        TIC=infotext('Moving vertically consumes Christmas trees.')
+        info3=true
+      end
     else
       table.insert(labels,{x=santax,y=santay,id=SP_TREE,count=0,t=t})
     end
@@ -127,6 +127,7 @@ function santa_parallax(dir)
   if step==SP_ELFL or step==SP_ELFL or step==SP_GIFT then
     hilightx=santax; hilighty=santay
     santax=prevx; santay=santay-dir
+    return false
   elseif step>=SP_SOCK and step<=SP_TREE then
     add_pack(step,1)
     lanes[santay][santax]=SP_EMPTY
@@ -134,6 +135,7 @@ function santa_parallax(dir)
   else
     add_pack(SP_TREE,-1)
   end
+  return true
 end
 
 function parallax_shift(dir,sx,sy,sdx)
