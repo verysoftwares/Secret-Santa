@@ -65,6 +65,7 @@ TIC=ssanta
 cls(0)
 
 function santa_input()
+  if fail then return end
   if not loaded then return end
   -- up to go further into the parallax
   if btnp(0) and santay>1 then
@@ -202,6 +203,10 @@ function advance_timer()
     info7=true
   end
   
+  if elf_count()==0 then
+    TIC=infotext('You win!')
+  end
+  
   --t2=t2+1
 end
 
@@ -217,13 +222,13 @@ function infotext(msg)
     -- originally I redrew Santa here,
     -- but he overlapped with SP_EMPTYs,
     -- and only the gift can overlap infotext anyway.
-    if msg~='Game over' then santa_gift_draw() end
+    if msg~='Game over' and msg~='You win!' then santa_gift_draw() end
 
     label_draw()
 
     if btnp(4) then 
       TIC=ssanta
-      if msg=='Game over' then reset() end 
+      if msg=='Game over' or msg=='You win!' then reset() end 
     end
   end
 end
