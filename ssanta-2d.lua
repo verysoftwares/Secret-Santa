@@ -26,49 +26,91 @@ santay=4
 santadx=1
 santas=3
 
-lanes={
-  {},
-  {},
-  {},
-  {},
-}
-for i=1,4 do
-  -- old method of generation
-  --for j=0,240/i-1,8 do
-    --local sp=SP_EMPTY
-    --if math.random()<0.15 then sp=SP_GIFT
-    --elseif math.random()<0.15 then sp=SP_ELFL-math.random(0,1)*16 end
-    --table.insert(lanes[i],sp)
-  --end
-  
-  -- new method of generation
-  local c=0
+function generate()
+    lanes={
+      {},
+      {},
+      {},
+      {},
+    }
+    for i=1,4 do
+    local c=0
   local rpos
+    if lvl==1 then    
+      -- insert random elf
+      while i==1 and c<1 do
+        repeat
+        rpos=math.random(1,math.floor(240/8/i+0.5))
+        until not lanes[i][rpos] and not (i==santay and rpos==santax)
+        lanes[i][rpos]=SP_ELFR+math.random(0,1)*16
+        c=c+1
+      end
+      
+        c=0
+        -- insert two random gifts
+        -- on separate lanes
+      while (i==2 or i==3) and c<1 do
+        repeat
+        rpos=math.random(1,math.floor(240/8/i+0.5))
+        until not lanes[i][rpos] and not (i==santay and rpos==santax)
+        lanes[i][rpos]=SP_GIFT
+        c=c+1
+      end
+    end
+    if lvl==2 then
+    while (i==1 and c<2) or (i==2 and c<1) do
+        repeat
+        rpos=math.random(1,math.floor(240/8/i+0.5))
+        until not lanes[i][rpos] and not (i==santay and rpos==santax)
+        lanes[i][rpos]=SP_ELFR+math.random(0,1)*16
+        c=c+1
+      end
+      
+        c=0
+      while ((i==1 or i==2) and c<2) or ((i==3 or i==4) and c<1) do
+        repeat
+        rpos=math.random(1,math.floor(240/8/i+0.5))
+        until not lanes[i][rpos] and not (i==santay and rpos==santax)
+        lanes[i][rpos]=SP_GIFT
+        c=c+1
+      end    
+    end
+    if lvl==3 then
+      -- old method of generation
+      --for j=0,240/i-1,8 do
+        --local sp=SP_EMPTY
+        --if math.random()<0.15 then sp=SP_GIFT
+        --elseif math.random()<0.15 then sp=SP_ELFL-math.random(0,1)*16 end
+        --table.insert(lanes[i],sp)
+      --end
+      
+      -- new method of generation
 
-  -- insert random elves
-  -- 3 in lane 1, 2 in lane 2, 1 in lane 3, 0 in lane 4
-  while c<4-i do
-    repeat
-    rpos=math.random(1,math.floor(240/8/i+0.5))
-    until not lanes[i][rpos] and not (i==santay and rpos==santax)
-    lanes[i][rpos]=SP_ELFR+math.random(0,1)*16
-    c=c+1
-  end
-
-  -- insert random gifts
-  -- 4 in lane 1, 3 in lane 2, 2 in lane 3, 1 in lane 4
-  c=0
-  while c<4-i+1 do
-    repeat
-    rpos=math.random(1,math.floor(240/8/i+0.5))
-    until not lanes[i][rpos] and not (i==santay and rpos==santax)
-    lanes[i][rpos]=SP_GIFT
-    c=c+1
-  end
-
+      -- insert random elves
+      -- 3 in lane 1, 2 in lane 2, 1 in lane 3, 0 in lane 4
+      while c<4-i do
+        repeat
+        rpos=math.random(1,math.floor(240/8/i+0.5))
+        until not lanes[i][rpos] and not (i==santay and rpos==santax)
+        lanes[i][rpos]=SP_ELFR+math.random(0,1)*16
+        c=c+1
+      end
+    
+      -- insert random gifts
+      -- 4 in lane 1, 3 in lane 2, 2 in lane 3, 1 in lane 4
+      c=0
+      while c<4-i+1 do
+        repeat
+        rpos=math.random(1,math.floor(240/8/i+0.5))
+        until not lanes[i][rpos] and not (i==santay and rpos==santax)
+        lanes[i][rpos]=SP_GIFT
+        c=c+1
+      end
+    end
   -- fill the rest with SP_EMPTYs
   for j=1,math.floor(240/8/i+0.5) do
     if not lanes[i][j] then lanes[i][j]=SP_EMPTY end
+  end
   end
 end
 
@@ -188,7 +230,7 @@ end
 --t2=0
 function advance_timer()
   if not loaded then return end
-		
+    
   timer=timer-1
 
   if timer<=0 then
@@ -251,15 +293,15 @@ function global_timer_events()
   end
   
   if elf_count()==0 then
-    TIC=infotext('You win!')
+    TIC=infotext('No elves left - you win!')
   end
 end
 
 t3=0
 function infotext(msg)
-  if msg~='Game over' and msg~='You win!' then sfx(3,'A-6',30,2) end
+  if msg~='Game over' and msg~='No elves left - you win!' then sfx(3,'A-6',30,2) end
   return function() 
-    if msg~='Game over' and msg~='You win!' then music2() end
+    if msg~='Game over' and msg~='No elves left - you win!' then music2() end
     
     local tw=print(msg,0,-6)
     print(msg,240/2-tw/2,136/2-3-8,2+t3*0.06%6)
@@ -275,8 +317,20 @@ function infotext(msg)
     if btnp(4) then 
       TIC=ssanta
       if msg=='Game over' then reset() end 
-      if msg=='You win!' then TIC=credits end 
+      if msg=='No elves left - you win!' then nextlevel() end 
     end
+  end
+end
+
+function nextlevel()
+  lvl=lvl+1
+  santax=1; santay=4; santadx=1; santas=3
+  for i=SP_SOCK,SP_TREE do pack[i]=4 end
+  gift=nil; giftshotx=nil; giftshoty=nil; giftshotdx=nil
+  if lvl>3 then
+  TIC=credits
+  else
+  generate(); TIC=modal; t=-1; tt2=0
   end
 end
 
@@ -401,6 +455,11 @@ function elf_count()
   for i=1,4 do
     for j,v in ipairs(lanes[i]) do
       if v==SP_ELFL or v==SP_ELFR then out=out+1 end
+    end
+  end
+  for j,l in ipairs(labels) do
+      if l.id==SP_ELFL or l.id==SP_ELFR then
+        out=out+1
     end
   end
   return out
@@ -574,7 +633,7 @@ function render_foreground()
   if v==SP_ELFR then count=elf_count() end
   if v==SP_GIFT then count=gift_count() end
   if v>=SP_SOCK and v<=SP_TREE then count=pack[v] end
-  print(string.format('%x',math.min(count,15)),64+(i-1)*xdist+offx+10,1+offy,2+i-1)
+  print(string.format('%X',math.min(count,15)),64+(i-1)*xdist+offx+10,1+offy,2+i-1)
   coroutine.yield()
   end
 
@@ -682,13 +741,13 @@ function music3()
   if tt2%4==0 and tt2<4*4*8-4*2 then
     sfx(1,12*3+tt2%15,6,0)
   end
-  if tt2%6==0 and tt2>=4*4*8-4*2 and tt2<4*4*8-4*2+6*8*24 then
+  if tt2%6==0 and tt2>=4*4*8-4*2 and tt2<4*4*8-4*2+6*8*28 then
     sfx(1,12*3+tt2%20+tt2%22,6,0)
   end
-  if tt2%7==0 and tt2>=4*4*8-4*2+6*8*24 then
-    sfx(1,12*3+(tt2-6*8*24)%20+(tt2-6*8*24)%22,6,0)
+  if tt2%7==0 and tt2>=4*4*8-4*2+6*8*28 then
+    sfx(1,12*3+(tt2-6*8*28)%20+(tt2-6*8*28)%22,6,0)
   end
-  if tt2==4*4*8-4*2+6*8*24+7*8*16-1 then tt2=-1 end
+  if tt2==4*4*8-4*2+6*8*28+7*8*16-1 then tt2=-1 end
   tt2=tt2+1
 end
 
@@ -696,7 +755,7 @@ function credits()
   cls(0)
   music3()
 
-  local pos={}		
+  local pos={}    
   for sp=SP_GIFT,SP_TREE do
     local a=t*0.065+(sp-SP_GIFT)*1.5
     table.insert(pos,{sp,a})
@@ -718,12 +777,70 @@ function credits()
   msg='Game by Leonard Somero. This is my 20th\nreleased game this year! 2023 has been\ncrazy, I started my own game company\nand am now making games full-time. :)\n\nWishing you the best of Xmas from Oulu,\nFinland. Greets to all you fine folks at\nthe Secret Santa Jam Discord.'
   print(string.sub(msg,1,math.max(0,(mt-8*16)//2)),12,136/2+16,11)
   mt=mt+1
-		
+    
   if btnp(4) then reset() end
-		
+    
   t=t+1
 end
 --TIC=credits
+
+lvl=1
+function modal()
+    cls(1)
+    
+    if t>=12*7 then
+    music3()
+    else
+    if t%12==0 and t>0 then 
+        local note='A-4'
+        if t==12*6 then note='A-5' end
+        sfx(9,note,12,0) 
+    end
+    end
+
+  local pos={}    
+  for sp=SP_GIFT,math.min(SP_GIFT-1+(t-12)//12,SP_TREE) do
+    local a=t*0.065+(sp-SP_GIFT)*1.5
+    table.insert(pos,{sp,a})
+  end
+  if t>=12 then spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8+2-8,0,4) end
+  table.sort(pos,function(a,b) return a[2]%(2*math.pi)<b[2]%(2*math.pi) end)
+  for i,v in ipairs(pos) do
+    local sp=v[1]
+    spr(sp,240/2-12+math.cos(v[2])*48,136/2-40+math.sin(t*0.1+(sp-SP_GIFT)*1.5)*18+2-8,0,4)
+    if v[2]%(2*math.pi)<math.pi then spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8+2-8,0,4) end
+  end
+
+    if t>=12*6 then
+    --poke(0x3FF8,12+t*0.15%4)
+    local msg=string.format('Level %d * Level %d * Level %d',lvl,lvl,lvl)
+    local tw=print(msg,0,-6*2,0,false,2,false)
+    print(msg,240/2-tw/2,136/2+8,12+t*0.15%4,false,2,false)
+    msg='Press Z to start.'
+    tw=print(msg,0,-6,0,false,1,true)
+    print(msg,240/2-tw/2,136-8-1,12,false,1,true)
+    if lvl==1 then
+    msg='AI: idle'
+    elseif lvl==2 then
+    msg='AI: naive'
+    elseif lvl==3 then
+    msg='AI: medium'
+    elseif lvl==4 then
+    msg='AI: intelligent'
+    end
+    tw=print(msg,0,-6)
+    print(msg,240/2-tw/2,136-8-32,12)
+    rectb(240/2-20*2,136-8-12-12,18*2,10*2,12)
+    rectb(240/2+2,136-8-12-12,18*2,10*2,12)
+    spr(SP_ELFR,240/2-20*2+2,136-8-12-12+2,0,2)
+    spr(SP_GIFT,240/2+2+2,136-8-12-12+2,0,2)
+    print(string.format('x%X',elf_count()),240/2-20*2+2+16+2+1,136-8-12-12+2+6,12)
+    print(string.format('x%X',gift_count()),240/2+2+2+16+2+1,136-8-12-12+2+6,12)
+    end
+    if btnp(4) then loaded=false; t=-1; tt=0; labels={}; TIC=ssanta end
+    t=t+1
+end
+TIC=modal
 
 -- palette swapping by borbware
   function pal(c0,c1)
@@ -731,6 +848,7 @@ end
     else poke4(0x3FF0*2+c0,c1) end
   end
 
+generate()
 -- <TILES>
 -- 001:eccccccccc888888caaaaaaaca888888cacccccccacc0ccccacc0ccccacc0ccc
 -- 002:ccccceee8888cceeaaaa0cee888a0ceeccca0ccc0cca0c0c0cca0c0c0cca0c0c
@@ -782,6 +900,7 @@ end
 -- 006:049004300490043004000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400452000000400
 -- 007:0400049004e0040004000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400309000000300
 -- 008:0400f4000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400269000000000
+-- 009:0300037003d003f003000300030003000300030003000300030003000300030003000300030003000300030003000300030003000300030003000300389000003100
 -- </SFX>
 
 -- <PATTERNS>
