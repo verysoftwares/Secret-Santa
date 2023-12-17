@@ -494,7 +494,18 @@ function render_background()
     if i==4 then ly=136/2-4+8+16+24-8-4 end
     for j,v in ipairs(lanes[i]) do
       if v==SP_EMPTY then
-      spr(v,(j-1)*(8*i),ly,0,i)
+      local sp=v
+      -- preview back tile
+      if not fail and i==santay-1 and j==parallax_shift(-1,santax,santay,santadx) then
+        --rect((j-1)*(8*i)+offx,ly,i*8,i*8,4)
+        sp=101
+      end
+      -- preview front tile
+      if not fail and i==santay+1 and j==parallax_shift(1,santax,santay,santadx) then
+        --rect((j-1)*(8*i)+offx,ly,i*8,i*8,5)
+        sp=101
+      end
+      spr(sp,(j-1)*(8*i),ly,0,i)
       coroutine.yield()
       end
     end
@@ -503,14 +514,6 @@ function render_background()
       local offx=0--t*(i*0.25)%(8*i)
       local flip=0
       local sp=v
-      -- preview back tile
-      if i==santay-1 and j==parallax_shift(-1,santax,santay,santadx) then
-        --rect((j-1)*(8*i)+offx,ly,i*8,i*8,4)
-      end
-      -- preview front tile
-      if i==santay+1 and j==parallax_shift(1,santax,santay,santadx) then
-        --rect((j-1)*(8*i)+offx,ly,i*8,i*8,5)
-      end
       if not fail and i==santay and j==santax then 
         if v==SP_GIFT and not gift then lanes[i][j]=SP_EMPTY; gift=1 end
         sp=SP_SANTA 
