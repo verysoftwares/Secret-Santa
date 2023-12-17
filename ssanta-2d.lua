@@ -46,9 +46,9 @@ function generate()
         c=c+1
       end
       
-        c=0
-        -- insert two random gifts
-        -- on separate lanes
+      c=0
+      -- insert two random gifts
+      -- on separate lanes
       while (i==2 or i==3) and c<1 do
         repeat
         rpos=math.random(1,math.floor(240/8/i+0.5))
@@ -58,7 +58,7 @@ function generate()
       end
     end
     if lvl==2 then
-    while (i==1 and c<2) or (i==2 and c<1) do
+      while (i==1 and c<2) or (i==2 and c<1) do
         repeat
         rpos=math.random(1,math.floor(240/8/i+0.5))
         until not lanes[i][rpos] and not (i==santay and rpos==santax)
@@ -66,7 +66,7 @@ function generate()
         c=c+1
       end
       
-        c=0
+      c=0
       while ((i==1 or i==2) and c<2) or ((i==3 or i==4) and c<1) do
         repeat
         rpos=math.random(1,math.floor(240/8/i+0.5))
@@ -106,6 +106,27 @@ function generate()
         lanes[i][rpos]=SP_GIFT
         c=c+1
       end
+    end
+    if lvl==4 then
+      while c<4-i+1 do
+        repeat
+        rpos=math.random(1,math.floor(240/8/i+0.5))
+        until not lanes[i][rpos] and not (i==santay and rpos==santax)
+        lanes[i][rpos]=SP_ELFR+math.random(0,1)*16
+        -- no instakills
+        if i==4 and rpos==2 and lanes[i][rpos]==SP_ELFL then lanes[i][rpos]=SP_ELFR end
+        if i==4 and rpos==8 and lanes[i][rpos]==SP_ELFR then lanes[i][rpos]=SP_ELFL end
+        c=c+1
+      end
+      
+      c=0
+      while (i==4 and c<1) do
+        repeat
+        rpos=math.random(1,math.floor(240/8/i+0.5))
+        until not lanes[i][rpos] and not (i==santay and rpos==santax)
+        lanes[i][rpos]=SP_GIFT
+        c=c+1
+      end    
     end
   -- fill the rest with SP_EMPTYs
   for j=1,math.floor(240/8/i+0.5) do
@@ -327,7 +348,7 @@ function nextlevel()
   santax=1; santay=4; santadx=1; santas=3
   for i=SP_SOCK,SP_TREE do pack[i]=4 end
   gift=nil; giftshotx=nil; giftshoty=nil; giftshotdx=nil
-  if lvl>3 then
+  if lvl>4 then
   TIC=credits
   else
   generate(); TIC=modal; t=-1; tt2=0
@@ -786,59 +807,81 @@ end
 
 lvl=1
 function modal()
-    cls(1)
-    
-    if t>=12*7 then
-    music3()
-    else
-    if t%12==0 and t>0 then 
-        local note='A-4'
-        if t==12*6 then note='A-5' end
-        sfx(9,note,12,0) 
-    end
-    end
+  cls(1)
+  
+  if t>=12*7 then
+  music3()
+  else
+  if t%12==0 and t>0 then 
+    local note='A-4'
+    if t==12*6 then note='A-5' end
+    sfx(9,note,12,0) 
+  end
+  end
 
   local pos={}    
   for sp=SP_GIFT,math.min(SP_GIFT-1+(t-12)//12,SP_TREE) do
     local a=t*0.065+(sp-SP_GIFT)*1.5
     table.insert(pos,{sp,a})
   end
-  if t>=12 then spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8+2-8,0,4) end
+  if t>=12 then 
+    for i=0,15 do pal(i,0) end
+    spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2+4,136/2-32-8+2-8,0,4) 
+    spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2-4,136/2-32-8+2-8,0,4) 
+    spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8+2-8+4,0,4) 
+    spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8+2-8-4,0,4) 
+    pal()
+    spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8+2-8,0,4) 
+  end
   table.sort(pos,function(a,b) return a[2]%(2*math.pi)<b[2]%(2*math.pi) end)
   for i,v in ipairs(pos) do
     local sp=v[1]
+    for i=0,15 do pal(i,0) end
+    spr(sp,240/2-12+math.cos(v[2])*48-4,136/2-40+math.sin(t*0.1+(sp-SP_GIFT)*1.5)*18+2-8,0,4)
+    spr(sp,240/2-12+math.cos(v[2])*48+4,136/2-40+math.sin(t*0.1+(sp-SP_GIFT)*1.5)*18+2-8,0,4)
+    spr(sp,240/2-12+math.cos(v[2])*48,136/2-40+math.sin(t*0.1+(sp-SP_GIFT)*1.5)*18+2-8-4,0,4)
+    spr(sp,240/2-12+math.cos(v[2])*48,136/2-40+math.sin(t*0.1+(sp-SP_GIFT)*1.5)*18+2-8+4,0,4)
+    pal()
     spr(sp,240/2-12+math.cos(v[2])*48,136/2-40+math.sin(t*0.1+(sp-SP_GIFT)*1.5)*18+2-8,0,4)
-    if v[2]%(2*math.pi)<math.pi then spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8+2-8,0,4) end
+    if v[2]%(2*math.pi)<math.pi then 
+    for i=0,15 do pal(i,0) end
+    spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2+4,136/2-32-8+2-8,0,4) 
+    spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2-4,136/2-32-8+2-8,0,4) 
+    spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8+2-8+4,0,4) 
+    spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8+2-8-4,0,4) 
+    pal()
+    spr(SP_SANTA+math.floor(t*0.06)%2*16,240/2-8*2,136/2-32-8+2-8,0,4) 
+    end
   end
 
-    if t>=12*6 then
-    --poke(0x3FF8,12+t*0.15%4)
-    local msg=string.format('Level %d * Level %d * Level %d',lvl,lvl,lvl)
-    local tw=print(msg,0,-6*2,0,false,2,false)
-    print(msg,240/2-tw/2,136/2+8,12+t*0.15%4,false,2,false)
-    msg='Press Z to start.'
-    tw=print(msg,0,-6,0,false,1,true)
-    print(msg,240/2-tw/2,136-8-1,12,false,1,true)
-    if lvl==1 then
-    msg='AI: idle'
-    elseif lvl==2 then
-    msg='AI: naive'
-    elseif lvl==3 then
-    msg='AI: medium'
-    elseif lvl==4 then
-    msg='AI: intelligent'
-    end
-    tw=print(msg,0,-6)
-    print(msg,240/2-tw/2,136-8-32,12)
-    rectb(240/2-20*2,136-8-12-12,18*2,10*2,12)
-    rectb(240/2+2,136-8-12-12,18*2,10*2,12)
-    spr(SP_ELFR,240/2-20*2+2,136-8-12-12+2,0,2)
-    spr(SP_GIFT,240/2+2+2,136-8-12-12+2,0,2)
-    print(string.format('x%X',elf_count()),240/2-20*2+2+16+2+1,136-8-12-12+2+6,12)
-    print(string.format('x%X',gift_count()),240/2+2+2+16+2+1,136-8-12-12+2+6,12)
-    end
-    if btnp(4) then loaded=false; t=-1; tt=0; labels={}; TIC=ssanta end
-    t=t+1
+  if t>=12*6 then
+  --poke(0x3FF8,12+t*0.15%4)
+  local msg=string.format('Level %d * Level %d * Level %d',lvl,lvl,lvl)
+  local tw=print(msg,0,-6*2,0,false,2,false)
+  print(msg,240/2-tw/2,136/2+8,12+t*0.15%4,false,2,false)
+  msg='Press Z to start.'
+  tw=print(msg,0,-6,0,false,1,true)
+  print(msg,240/2-tw/2,136-8-1,12,false,1,true)
+  if lvl==1 then
+  msg='AI: idle'
+  elseif lvl==2 then
+  msg='AI: naive'
+  elseif lvl==3 then
+  msg='AI: medium'
+  elseif lvl==4 then
+  msg='AI: intelligent'
+  end
+  tw=print(msg,0,-6)
+  print(msg,240/2-tw/2,136-8-32,12)
+  rectb(240/2-20*2,136-8-12-12,18*2,10*2,12)
+  rectb(240/2+2,136-8-12-12,18*2,10*2,12)
+  spr(SP_ELFR,240/2-20*2+2,136-8-12-12+2,0,2)
+  spr(SP_GIFT,240/2+2+2,136-8-12-12+2,0,2)
+  print(string.format('x%X',elf_count()),240/2-20*2+2+16+2+1,136-8-12-12+2+6,12)
+  print(string.format('x%X',gift_count()),240/2+2+2+16+2+1,136-8-12-12+2+6,12)
+  end
+  if btnp(4) then loaded=false; t=-1; tt=0; labels={}; TIC=ssanta end
+  t=t+1
 end
 TIC=modal
 
