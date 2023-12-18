@@ -944,9 +944,9 @@ function challenge()
   
   if btnp(0) then cha=cha-1; if cha<1 then cha=4 end; lvl=cha; generate() end
   if btnp(1) then cha=cha+1; if cha>4 then cha=1 end; lvl=cha; generate() end
-  if btnp(4) or (t>0 and keyp(50)) then lvl=cha; generate(); t=-1; TIC=ssanta end
   
   for i=1,4 do
+    lvl=i; generate()
     local offy=6
     local msg=string.format('Level %d',i)
     local col=12
@@ -957,16 +957,18 @@ function challenge()
     else
     print(string.format('Best: %.2d:%.2d:%.2d',records[i]/60//60,records[i]//60%60,math.floor(records[i]%60*100/60)),48,24+(i-1)*24+14+offy,12,false,1,true)
     end
-    if cha==i then
+    --if cha==i then
     rectb(40+tw+8,24+(i-1)*24-4-1+offy,18*2,10*2,12)
     rectb(40+tw+8+18*2+4,24+(i-1)*24-4-1+offy,18*2,10*2,12)
     spr(SP_ELFR,40+tw+8+1+1,24+(i-1)*24+1-4+1-1+offy,0,2)
     spr(SP_GIFT,40+tw+8+18*2+4+1+1,24+(i-1)*24+1-4+1-1+offy,0,2)
     print(string.format('x%X',elf_count()),40+tw+8+1+20,24+(i-1)*24+1+6-4-1+offy,12)
     print(string.format('x%X',gift_count()),40+tw+8+18*2+4+1+20,24+(i-1)*24+1+6-4-1+offy,12)
-    end
+    --end
   end
   
+  if btnp(4) or (t>0 and keyp(50)) then lvl=cha; generate(); t=-1; TIC=ssanta end
+
   t=t+1
 end
 
