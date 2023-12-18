@@ -5,6 +5,18 @@
 -- license: MIT
 -- script:  lua
 -- saveid:  1SSANTA
+-- menu:    ClearSaveFile
+
+-- developer mode: 
+-- you can clear your save file
+-- from Esc -> Game Menu,
+-- removing the Challenge mode.
+function MENU(i)
+  for j=0,255 do pmem(j,0) end
+  for k=1,4 do
+    records[k]=0
+  end
+end
 
 SP_ELFL=81
 SP_ELFR=SP_ELFL-16
