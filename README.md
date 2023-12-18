@@ -4,5 +4,5 @@ latest update: https://verysoftwares.itch.io/1ssantaexe/devlog/652532/challenge-
 
 instructions for running with TIC-80:
 * download http://tic80.com
-* download the .tic file above
+* download the .tic file above: https://github.com/verysoftwares/Secret-Santa/blob/main/ssanta-2d.tic
 * merge them (run .tic in .exe)
