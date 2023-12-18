@@ -353,7 +353,7 @@ function global_timer_events()
   end
   
   if elf_count()==0 then
-    if t<records[lvl] then records[lvl]=t end
+    if records[lvl]==0 or t<records[lvl] then records[lvl]=t end
     if pmem(255-lvl)==0 or records[lvl]<pmem(255-lvl) then pmem(255-lvl,records[lvl]) end
     if pmem(255)==0 then
     TIC=infotext('No elves left - you win!')
