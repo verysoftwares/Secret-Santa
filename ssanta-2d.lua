@@ -168,6 +168,7 @@ function santa_input()
     local moved=santa_parallax(-1)
     if moved and pmem(3)==0 and not info3 then
       TIC=infotext('Moving vertically consumes Christmas trees.')
+      pmem(3,1)
       info3=true
     end
   end
@@ -176,6 +177,7 @@ function santa_input()
     local moved=santa_parallax(1)
     if moved and pmem(3)==0 and not info3 then
       TIC=infotext('Moving vertically consumes Christmas trees.')
+      pmem(3,1)
       info3=true
     end
   end
@@ -195,6 +197,7 @@ function santa_input()
   if (btnp(5) or (santadx>0 and btnp(2)) or (santadx<0 and btnp(3))) then
     if pmem(4)==0 and not info4 then
       TIC=infotext('Turning around consumes wooly socks.')
+      pmem(4,1)
       info4=true
     end
     if pack[SP_SOCK]>0 then
@@ -218,7 +221,7 @@ function santa_parallax(dir)
     santax=prevx; santay=santay-dir
     return false
   elseif step==SP_GIFT then
-    if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=SP_EMPTY; santax=prevx; santay=santay-dir; add_pack(SP_CANE,-1); if pmem(6)==0 and not info6 then TIC=infotext('Picking up gifts consumes candy canes.'); info6=true end; sfx(6,'D-5',30,3)
+    if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=SP_EMPTY; santax=prevx; santay=santay-dir; add_pack(SP_CANE,-1); if pmem(6)==0 and not info6 then TIC=infotext('Picking up gifts consumes candy canes.'); pmem(6,1); info6=true end; sfx(6,'D-5',30,3)
     else hilightx=santax; hilighty=santay; santax=prevx; santay=santay-dir; if not gift and pack[SP_CANE]<=0 then table.insert(labels,{x=santax,y=santay,id=SP_CANE,count=0,t=t}) end end
     return false
   elseif pack[SP_TREE]>0 and step>=SP_SOCK and step<=SP_TREE then
@@ -300,29 +303,42 @@ function global_timer_events()
   
   if pmem(0)==0 and loaded and not info0 then
     TIC=infotext('Merry Xmas! Press Z to advance these hints.')
-    --pmem(0,1)
+    pmem(0,1)
     info0=true
   elseif info0 and pmem(2)==0 and not info2 then
     TIC=infotext('While Santa moves, help him with arrow keys.')
+    pmem(2,1)
     info2=true
   elseif TIC==ssanta and (info3 or info4 or info6) and pmem(5)==0 and (not info5) then
     TIC=infotext('Keep an eye out for resources at the top.')
+    pmem(5,1)
     info5=true
   elseif TIC==ssanta and info6 and pmem(7)==0 and not info7 then
     TIC=infotext('Oh, and you can throw gifts with Z!')
+    pmem(7,1)
     info7=true
   end
   
   if elf_count()==0 then
+    if t<records[lvl] then records[lvl]=t end
+    if pmem(255-lvl)==0 or records[lvl]<pmem(255-lvl) then pmem(255-lvl,records[lvl]) end
+    if pmem(255)==0 then
     TIC=infotext('No elves left - you win!')
+    else
+      if t<60*60 then
+      TIC=infotext(string.format('No elves left - you win! (%.2d:%.2d)',t//60,math.floor(t%60*100/60)))
+      else
+      TIC=infotext(string.format('No elves left - you win! (%.2d:%.2d:%.2d)',t/60//60,t//60%60,math.floor(t%60*100/60)))
+      end
+    end
   end
 end
 
 t3=0
 function infotext(msg)
-  if msg~='Game over' and msg~='No elves left - you win!' then sfx(3,'A-6',30,2) end
+  if msg~='Game over' and string.sub(msg,1,13)~='No elves left' then sfx(3,'A-6',30,2) end
   return function() 
-    if msg~='Game over' and msg~='No elves left - you win!' then music2() end
+    if msg~='Game over' and string.sub(msg,1,13)~='No elves left' then music2() end
     
     local tw=print(msg,0,-6)
     print(msg,240/2-tw/2,136/2-3-8,2+t3*0.06%6)
@@ -338,7 +354,7 @@ function infotext(msg)
     if btnp(4) then 
       TIC=ssanta
       if msg=='Game over' then reset() end 
-      if msg=='No elves left - you win!' then nextlevel() end 
+      if string.sub(msg,1,13)=='No elves left' then nextlevel() end 
     end
   end
 end
@@ -348,11 +364,13 @@ function nextlevel()
   santax=1; santay=4; santadx=1; santas=3
   for i=SP_SOCK,SP_TREE do pack[i]=4 end
   gift=nil; giftshotx=nil; giftshoty=nil; giftshotdx=nil
-  if lvl>4 then
-  TIC=credits; tt2=0
-  else
-  generate(); TIC=modal; t=-1; tt2=0
-  end
+  if pmem(255)==0 then
+    if lvl>4 then
+    pmem(255,1); TIC=credits; tt2=0
+    else
+    generate(); TIC=modal; t=-1; tt2=0
+    end
+  else TIC=challenge; t=-1; tt2=0; tt3=0; return end
 end
 
 function santa_gift_draw()
@@ -380,7 +398,7 @@ function santa_advance()
   if santax<1 then santax=#lanes[santay]; border=true end
   local step=lanes[santay][santax]
   if step==SP_GIFT then 
-    if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=SP_EMPTY; santax=prevx; add_pack(SP_CANE,-1); if pmem(6)==0 and not info6 then TIC=infotext('Picking up gifts consumes candy canes.'); info6=true end; sfx(6,'D-5',30,3)
+    if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=SP_EMPTY; santax=prevx; add_pack(SP_CANE,-1); if pmem(6)==0 and not info6 then TIC=infotext('Picking up gifts consumes candy canes.'); pmem(6,1); info6=true end; sfx(6,'D-5',30,3)
     else hilightx=santax; hilighty=santay; santax=prevx; if not gift and pack[SP_CANE]<=0 then table.insert(labels,{x=santax,y=santay,id=SP_CANE,count=0,t=t}) end end
   elseif step==SP_ELFL or step==SP_ELFR then
     hilightx=santax; hilighty=santay
@@ -390,7 +408,7 @@ function santa_advance()
     lanes[santay][santax]=SP_EMPTY
     sfx(7,'A-4',10,3)
   end
-  if border and santax~=prevx then if gift then gift=gift-1; if gift<=0 then gift=nil; table.insert(labels,{x=santax,y=santay,id=SP_GIFT,count=0,t=t}); if pmem(10)==0 and not info10 then TIC=infotext('You can\'t wrap gifts around the screen.'); info10=true end end end end
+  if border and santax~=prevx then if gift then gift=gift-1; if gift<=0 then gift=nil; table.insert(labels,{x=santax,y=santay,id=SP_GIFT,count=0,t=t}); if pmem(10)==0 and not info10 then TIC=infotext('You can\'t wrap gifts around the screen.'); pmem(10,1); info10=true end end end end
 end
 
 function elf_advance()
@@ -430,6 +448,7 @@ function elf_advance()
         fail=t
         if pmem(1)==0 and not info1 then
           TIC=infotext('Don\'t let the elves catch you!')
+          pmem(1,1)
           info1=true
         end
         table.insert(labels,{x=colli,y=i,id=SP_SANTA,count=0,t=t})
@@ -515,12 +534,14 @@ function gift_advance()
       table.insert(labels,{x=giftshotx,y=giftshoty,id=step,count=0,t=t})
       if pmem(8)==0 and not info8 then
         TIC=infotext('Nice, you hit an elf! Get \'em all!')
+        pmem(8,1)
         info8=true
       end
     end
     if elf and not hit then
       if pmem(9)==0 and not info9 then
         TIC=infotext('Elves can\'t be hit from behind.')
+        pmem(9,1)
         info9=true
       end
     end
@@ -813,11 +834,22 @@ function credits()
   print(string.sub(msg,1,math.max(0,(mt-8*16)//2)),12,136/2+16,11)
   mt=mt+1
     
-  if btnp(4) then reset() end
+  if btnp(4) then 
+    TIC=cm_unlock
+  end
     
   t=t+1
 end
 --TIC=credits
+
+function cm_unlock()
+  cls(8)
+  local msg='Challenge mode unlocked!'
+  local tw=print(msg,0,-6)
+  print(msg,240/2-tw/2,136/2-3,11)
+  if btnp(4) then reset() end
+  t=t+1
+end
 
 lvl=1
 function modal()
@@ -897,7 +929,57 @@ function modal()
   if btnp(4) then loaded=false; t=-1; tt=0; labels={}; TIC=ssanta end
   t=t+1
 end
-TIC=modal
+
+records={
+}
+for i=1,4 do records[i]=pmem(255-(i)) end
+
+cha=1
+lvl=cha; generate()
+function challenge()
+  cls(8)
+  music4()
+  local tw=print('-=* Challenge mode *=-',0,-6*2,0,false,2,false)
+  print('-=* Challenge mode *=-',240/2-tw/2,4,12,false,2,false)
+  
+  if btnp(0) then cha=cha-1; if cha<1 then cha=4 end; lvl=cha; generate() end
+  if btnp(1) then cha=cha+1; if cha>4 then cha=1 end; lvl=cha; generate() end
+  if btnp(4) or (t>0 and keyp(50)) then lvl=cha; generate(); t=-1; TIC=ssanta end
+  
+  for i=1,4 do
+    local offy=6
+    local msg=string.format('Level %d',i)
+    local col=12
+    if cha==i then msg='>'..msg; col=12+t*0.2%4 end
+    local tw=print(msg,40,24+(i-1)*24+offy,col,false,2,false)
+    if records[i]<60*60 then
+    print(string.format('Best: %.2d:%.2d',records[i]//60,math.floor(records[i]%60*100/60)),48,24+(i-1)*24+14+offy,12,false,1,true)
+    else
+    print(string.format('Best: %.2d:%.2d:%.2d',records[i]/60//60,records[i]//60%60,math.floor(records[i]%60*100/60)),48,24+(i-1)*24+14+offy,12,false,1,true)
+    end
+    if cha==i then
+    rectb(40+tw+8,24+(i-1)*24-4-1+offy,18*2,10*2,12)
+    rectb(40+tw+8+18*2+4,24+(i-1)*24-4-1+offy,18*2,10*2,12)
+    spr(SP_ELFR,40+tw+8+1+1,24+(i-1)*24+1-4+1-1+offy,0,2)
+    spr(SP_GIFT,40+tw+8+18*2+4+1+1,24+(i-1)*24+1-4+1-1+offy,0,2)
+    print(string.format('x%X',elf_count()),40+tw+8+1+20,24+(i-1)*24+1+6-4-1+offy,12)
+    print(string.format('x%X',gift_count()),40+tw+8+18*2+4+1+20,24+(i-1)*24+1+6-4-1+offy,12)
+    end
+  end
+  
+  t=t+1
+end
+
+function music4()
+  tt3=tt3 or 0
+  rt3=rt3 or 1
+  if (tt3<90 and tt3%1==0) or (tt3>=90 and tt3%9==0) then
+    sfx(1,12*3+tt3%20+tt3%22,9,0)
+  end
+  if tt3==90-1 and rt3<1 then tt3=0; rt3=rt3+1 end
+  if tt3==90+9*8*4*4-9*8*2-9*4-1 then tt3=-1; rt3=0 end
+  tt3=tt3+1
+end
 
 -- palette swapping by borbware
   function pal(c0,c1)
@@ -906,6 +988,12 @@ TIC=modal
   end
 
 generate()
+
+if pmem(255)>0 then
+  TIC=challenge
+else
+  TIC=modal
+end
 -- <TILES>
 -- 001:eccccccccc888888caaaaaaaca888888cacccccccacc0ccccacc0ccccacc0ccc
 -- 002:ccccceee8888cceeaaaa0cee888a0ceeccca0ccc0cca0c0c0cca0c0c0cca0c0c
