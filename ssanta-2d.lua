@@ -47,7 +47,7 @@ function generate()
     }
     for i=1,4 do
     local c=0
-  local rpos
+    local rpos
     if lvl==1 then    
       -- insert random elf
       while i==1 and c<1 do
