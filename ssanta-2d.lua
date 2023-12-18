@@ -13,7 +13,7 @@
 -- removing the Challenge mode.
 function MENU(i)
   for j=0,255 do pmem(j,0) end
-  for k=1,4 do
+  for k=1,5 do
     records[k]=0
   end
 end
@@ -133,6 +133,27 @@ function generate()
       
       c=0
       while (i==4 and c<1) do
+        repeat
+        rpos=math.random(1,math.floor(240/8/i+0.5))
+        until not lanes[i][rpos] and not (i==santay and rpos==santax)
+        lanes[i][rpos]=SP_GIFT
+        c=c+1
+      end    
+    end
+    if lvl==5 then
+      while i==4 and c<1 do
+        repeat
+        rpos=math.random(1,math.floor(240/8/i+0.5))
+        until not lanes[i][rpos] and not (i==santay and rpos==santax)
+        lanes[i][rpos]=SP_ELFR+math.random(0,1)*16
+        -- no instakills
+        if i==4 and rpos==2 and lanes[i][rpos]==SP_ELFL then lanes[i][rpos]=SP_ELFR end
+        if i==4 and rpos==8 and lanes[i][rpos]==SP_ELFR then lanes[i][rpos]=SP_ELFL end
+        c=c+1
+      end
+      
+      c=0
+      while ((i<4 and c<4) or (i==4 and c<3)) do
         repeat
         rpos=math.random(1,math.floor(240/8/i+0.5))
         until not lanes[i][rpos] and not (i==santay and rpos==santax)
@@ -377,7 +398,7 @@ function nextlevel()
   for i=SP_SOCK,SP_TREE do pack[i]=4 end
   gift=nil; giftshotx=nil; giftshoty=nil; giftshotdx=nil
   if pmem(255)==0 then
-    if lvl>4 then
+    if lvl>5 then
     pmem(255,1); TIC=credits; tt2=0
     else
     generate(); TIC=modal; t=-1; tt2=0
@@ -928,6 +949,8 @@ function modal()
   msg='AI: medium'
   elseif lvl==4 then
   msg='AI: intelligent'
+  elseif lvl==5 then
+  if t%maxtimer<maxtimer/2 then msg='AI: throwers' else msg='' end
   end
   tw=print(msg,0,-6)
   print(msg,240/2-tw/2,136-8-32,12)
@@ -944,7 +967,7 @@ end
 
 records={
 }
-for i=1,4 do records[i]=pmem(255-(i)) end
+for i=1,5 do records[i]=pmem(255-(i)) end
 
 cha=1
 lvl=cha; generate()
@@ -955,24 +978,24 @@ function challenge()
   music4()
   local msg='-=* Challenge mode *=-'
   local tw=print(msg,0,-6*2,0,false,2,false)
-  print(msg,240/2-tw/2-2,4,0,false,2,false)
+  print(msg,240/2-tw/2-2,4-2,0,false,2,false)
   coroutine.yield()
-  print(msg,240/2-tw/2+2,4,0,false,2,false)
+  print(msg,240/2-tw/2+2,4-2,0,false,2,false)
   coroutine.yield()
-  print(msg,240/2-tw/2,4-2,0,false,2,false)
+  print(msg,240/2-tw/2,4-2-2,0,false,2,false)
   coroutine.yield()
-  print(msg,240/2-tw/2,4+2,0,false,2,false)
+  print(msg,240/2-tw/2,4+2-2,0,false,2,false)
   coroutine.yield()
-  print(msg,240/2-tw/2,4,12,false,2,false)
+  print(msg,240/2-tw/2,4-2,12,false,2,false)
   coroutine.yield()
   
-  if btnp(0) then cha=cha-1; if cha<1 then cha=4 end; lvl=cha; generate() end
-  if btnp(1) then cha=cha+1; if cha>4 then cha=1 end; lvl=cha; generate() end
+  if btnp(0) then cha=cha-1; if cha<1 then cha=5 end; lvl=cha; generate() end
+  if btnp(1) then cha=cha+1; if cha>5 then cha=1 end; lvl=cha; generate() end
   
-  for i=1,4 do
+  for i=1,5 do
     lvl=i; generate()
     local offx=(i-1)*22-36
-    local offy=6
+    local offy=-4+3-2
     local msg=string.format('Level %d',i)
     local col=12
     if cha==i then msg='>'..msg; col=15 end
