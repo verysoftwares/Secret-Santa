@@ -975,7 +975,7 @@ function challenge()
     local offy=6
     local msg=string.format('Level %d',i)
     local col=12
-    if cha==i then msg='>'..msg; col=12+t*0.2%4 end
+    if cha==i then msg='>'..msg; col=15 end
     print(msg,40+2+offx,24+(i-1)*24+offy,1+i-1,false,2,false)
     coroutine.yield()
     print(msg,40-2+offx,24+(i-1)*24+offy,1+i-1,false,2,false)
@@ -1008,7 +1008,7 @@ function challenge()
     --end
   end
   
-  if btnp(4) or (t>0 and keyp(50)) then lvl=cha; generate(); t=-1; tt=0; loaded=false; labels={}; TIC=ssanta end
+  if btnp(4) or (t>0 and keyp(50)) then lvl=cha; generate(); t=-1; tt=0; loaded=false; labels={}; TIC=ssanta; t4=-1 end
 
   end)
 
