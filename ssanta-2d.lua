@@ -939,8 +939,13 @@ lvl=cha; generate()
 function challenge()
   cls(8)
   music4()
-  local tw=print('-=* Challenge mode *=-',0,-6*2,0,false,2,false)
-  print('-=* Challenge mode *=-',240/2-tw/2,4,12,false,2,false)
+  local msg='-=* Challenge mode *=-'
+  local tw=print(msg,0,-6*2,0,false,2,false)
+  print(msg,240/2-tw/2-2,4,0,false,2,false)
+  print(msg,240/2-tw/2+2,4,0,false,2,false)
+  print(msg,240/2-tw/2,4-2,0,false,2,false)
+  print(msg,240/2-tw/2,4+2,0,false,2,false)
+  print(msg,240/2-tw/2,4,12,false,2,false)
   
   if btnp(0) then cha=cha-1; if cha<1 then cha=4 end; lvl=cha; generate() end
   if btnp(1) then cha=cha+1; if cha>4 then cha=1 end; lvl=cha; generate() end
@@ -951,6 +956,10 @@ function challenge()
     local msg=string.format('Level %d',i)
     local col=12
     if cha==i then msg='>'..msg; col=12+t*0.2%4 end
+    print(msg,40+2,24+(i-1)*24+offy,0,false,2,false)
+    print(msg,40-2,24+(i-1)*24+offy,0,false,2,false)
+    print(msg,40,24+(i-1)*24+offy+2,0,false,2,false)
+    print(msg,40,24+(i-1)*24+offy-2,0,false,2,false)
     local tw=print(msg,40,24+(i-1)*24+offy,col,false,2,false)
     if records[i]<60*60 then
     print(string.format('Best: %.2d:%.2d',records[i]//60,math.floor(records[i]%60*100/60)),48,24+(i-1)*24+14+offy,12,false,1,true)
