@@ -14,9 +14,14 @@
 function MENU(i)
   for j=0,255 do pmem(j,0) end
   for k=1,5 do
-    records[k]=0
+    records[k]=partimes[k]
   end
 end
+
+partimes={
+446,842,2498,1934,20*60
+}
+--for 
 
 SP_ELFL=81
 SP_ELFR=SP_ELFL-16
@@ -967,7 +972,7 @@ end
 
 records={
 }
-for i=1,5 do records[i]=pmem(255-(i)) end
+for i=1,5 do records[i]=pmem(255-(i)); if records[i]==0 then records[i]=partimes[i] end end
 
 cha=1
 lvl=cha; generate()
@@ -1014,6 +1019,8 @@ function challenge()
     else
     print(string.format('Best: %.2d:%.2d:%.2d',records[i]/60//60,records[i]//60%60,math.floor(records[i]%60*100/60)),48+offx,24+(i-1)*24+14+offy,col,false,1,true)
     end
+    msg=string.format('Par: %.2d:%.2d',partimes[i]//60,math.floor(partimes[i]%60*100/60))
+    print(msg,40+offx+tw+6-40+1+6,24+14+(i-1)*24+offy,col,false,1,true)
     coroutine.yield()
     --if cha==i then
     rectb(40+tw+8+offx,24+(i-1)*24-4-1+offy,18*2,10*2,12)
@@ -1079,8 +1086,12 @@ end
 -- 018:ccca00ccaaaa0ccecaaa0ceeaaaa0ceeaaaa0cee8888ccee000cceeecccceeee
 -- 019:cacccccccaaaaaaacaaacaaacaaaaccccaaaaaaac8888888cc000cccecccccec
 -- 020:ccca00ccaaaa0ccecaaa0ceeaaaa0ceeaaaa0cee8888ccee000cceeecccceeee
+-- 051:5999999009999444099996460099944405599955055999950559999500099990
+-- 052:5999999005599444055996460559944400599955000999950009999500099990
 -- 065:566666600666644406666a4a0066644405566655055666650556666500066660
 -- 066:566666600556644405566a4a0556644400566655000666650006666500066660
+-- 067:0999999544499990646999904449990055999550599995505999955009999000
+-- 068:0999999544499550646995504449955055999500599990005999900009999000
 -- 070:000000000660066006c66c6006666660ccc66ccdccc66ccdccc66ccdddd77ddd
 -- 071:000000000990099009c99c9009999990ccc99ccdccc99ccdccc99ccdddd88ddd
 -- 072:0200002222200222022202200022200000022200022022202220022222000020
