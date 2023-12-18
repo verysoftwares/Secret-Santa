@@ -963,9 +963,9 @@ function challenge()
     print(msg,40+offx,24+(i-1)*24+offy-2,0,false,2,false)
     local tw=print(msg,40+offx,24+(i-1)*24+offy,col,false,2,false)
     if records[i]<60*60 then
-    print(string.format('Best: %.2d:%.2d',records[i]//60,math.floor(records[i]%60*100/60)),48+offx,24+(i-1)*24+14+offy,12,false,1,true)
+    print(string.format('Best: %.2d:%.2d',records[i]//60,math.floor(records[i]%60*100/60)),48+offx,24+(i-1)*24+14+offy,col,false,1,true)
     else
-    print(string.format('Best: %.2d:%.2d:%.2d',records[i]/60//60,records[i]//60%60,math.floor(records[i]%60*100/60)),48+offx,24+(i-1)*24+14+offy,12,false,1,true)
+    print(string.format('Best: %.2d:%.2d:%.2d',records[i]/60//60,records[i]//60%60,math.floor(records[i]%60*100/60)),48+offx,24+(i-1)*24+14+offy,col,false,1,true)
     end
     --if cha==i then
     rectb(40+tw+8+offx,24+(i-1)*24-4-1+offy,18*2,10*2,12)
