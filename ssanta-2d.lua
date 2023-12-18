@@ -957,10 +957,10 @@ function challenge()
     local msg=string.format('Level %d',i)
     local col=12
     if cha==i then msg='>'..msg; col=12+t*0.2%4 end
-    print(msg,40+2+offx,24+(i-1)*24+offy,0,false,2,false)
-    print(msg,40-2+offx,24+(i-1)*24+offy,0,false,2,false)
-    print(msg,40+offx,24+(i-1)*24+offy+2,0,false,2,false)
-    print(msg,40+offx,24+(i-1)*24+offy-2,0,false,2,false)
+    print(msg,40+2+offx,24+(i-1)*24+offy,1+i-1,false,2,false)
+    print(msg,40-2+offx,24+(i-1)*24+offy,1+i-1,false,2,false)
+    print(msg,40+offx,24+(i-1)*24+offy+2,1+i-1,false,2,false)
+    print(msg,40+offx,24+(i-1)*24+offy-2,1+i-1,false,2,false)
     local tw=print(msg,40+offx,24+(i-1)*24+offy,col,false,2,false)
     if records[i]<60*60 then
     print(string.format('Best: %.2d:%.2d',records[i]//60,math.floor(records[i]%60*100/60)),48+offx,24+(i-1)*24+14+offy,col,false,1,true)
