@@ -948,16 +948,23 @@ for i=1,4 do records[i]=pmem(255-(i)) end
 
 cha=1
 lvl=cha; generate()
+t4=0
 function challenge()
+  local cha_cor= coroutine.create(function()
   cls(8)
   music4()
   local msg='-=* Challenge mode *=-'
   local tw=print(msg,0,-6*2,0,false,2,false)
   print(msg,240/2-tw/2-2,4,0,false,2,false)
+  coroutine.yield()
   print(msg,240/2-tw/2+2,4,0,false,2,false)
+  coroutine.yield()
   print(msg,240/2-tw/2,4-2,0,false,2,false)
+  coroutine.yield()
   print(msg,240/2-tw/2,4+2,0,false,2,false)
+  coroutine.yield()
   print(msg,240/2-tw/2,4,12,false,2,false)
+  coroutine.yield()
   
   if btnp(0) then cha=cha-1; if cha<1 then cha=4 end; lvl=cha; generate() end
   if btnp(1) then cha=cha+1; if cha>4 then cha=1 end; lvl=cha; generate() end
@@ -970,28 +977,50 @@ function challenge()
     local col=12
     if cha==i then msg='>'..msg; col=12+t*0.2%4 end
     print(msg,40+2+offx,24+(i-1)*24+offy,1+i-1,false,2,false)
+    coroutine.yield()
     print(msg,40-2+offx,24+(i-1)*24+offy,1+i-1,false,2,false)
+    coroutine.yield()
     print(msg,40+offx,24+(i-1)*24+offy+2,1+i-1,false,2,false)
+    coroutine.yield()
     print(msg,40+offx,24+(i-1)*24+offy-2,1+i-1,false,2,false)
+    coroutine.yield()
     local tw=print(msg,40+offx,24+(i-1)*24+offy,col,false,2,false)
+    coroutine.yield()
     if records[i]<60*60 then
     print(string.format('Best: %.2d:%.2d',records[i]//60,math.floor(records[i]%60*100/60)),48+offx,24+(i-1)*24+14+offy,col,false,1,true)
     else
     print(string.format('Best: %.2d:%.2d:%.2d',records[i]/60//60,records[i]//60%60,math.floor(records[i]%60*100/60)),48+offx,24+(i-1)*24+14+offy,col,false,1,true)
     end
+    coroutine.yield()
     --if cha==i then
     rectb(40+tw+8+offx,24+(i-1)*24-4-1+offy,18*2,10*2,12)
+    coroutine.yield()
     rectb(40+tw+8+18*2+4+offx,24+(i-1)*24-4-1+offy,18*2,10*2,12)
+    coroutine.yield()
     spr(SP_ELFR,40+tw+8+1+1+offx,24+(i-1)*24+1-4+1-1+offy,0,2)
+    coroutine.yield()
     spr(SP_GIFT,40+tw+8+18*2+4+1+1+offx,24+(i-1)*24+1-4+1-1+offy,0,2)
+    coroutine.yield()
     print(string.format('x%X',elf_count()),40+tw+8+1+20+offx,24+(i-1)*24+1+6-4-1+offy,12)
+    coroutine.yield()
     print(string.format('x%X',gift_count()),40+tw+8+18*2+4+1+20+offx,24+(i-1)*24+1+6-4-1+offy,12)
+    coroutine.yield()
     --end
   end
   
   if btnp(4) or (t>0 and keyp(50)) then lvl=cha; generate(); t=-1; tt=0; loaded=false; labels={}; TIC=ssanta end
 
-  t=t+1
+  end)
+
+		local i=0
+  while i<t4 do
+    if not coroutine.resume(cha_cor) then
+      cha_loaded=true
+      break
+    end
+    i=i+1
+  end
+  t4=t4+1
 end
 
 function music4()
