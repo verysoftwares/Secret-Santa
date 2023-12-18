@@ -1013,7 +1013,7 @@ function challenge()
   end)
 
 		local i=0
-  while i<t4 do
+  while i<t4//2 do
     if not coroutine.resume(cha_cor) then
       cha_loaded=true
       break
