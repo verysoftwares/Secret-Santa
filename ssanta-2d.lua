@@ -977,7 +977,7 @@ function challenge()
     --end
   end
   
-  if btnp(4) or (t>0 and keyp(50)) then lvl=cha; generate(); t=-1; tt=0; TIC=ssanta end
+  if btnp(4) or (t>0 and keyp(50)) then lvl=cha; generate(); t=-1; tt=0; loaded=false; labels={}; TIC=ssanta end
 
   t=t+1
 end
