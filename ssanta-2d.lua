@@ -952,7 +952,7 @@ function challenge()
   
   for i=1,4 do
     lvl=i; generate()
-    local offx=(i-1)*24-36
+    local offx=(i-1)*22-36
     local offy=6
     local msg=string.format('Level %d',i)
     local col=12
