@@ -12,7 +12,7 @@
 -- from Esc -> Game Menu,
 -- removing the Challenge mode.
 function MENU(i)
-  for j=0,255 do pmem(j,0) end
+  for j=0,255 do pmem(j,0); flag_empty_pmem=true end
   for k=1,5 do
     records[k]=partimes[k]
   end
@@ -374,6 +374,15 @@ function global_timer_events()
       end
     end
   end
+  
+  -- for actual clearing of memory
+  -- press Shift+R
+		if flag_empty_pmem or (key(18) and key(64)) then
+		  for j=0,255 do pmem(j,0) end
+				for i=1,5 do records[i]=pmem(255-i) end
+		  trace('Save reset.',8)
+		  flag_empty_pmem=false
+		end
 end
 
 t3=0
