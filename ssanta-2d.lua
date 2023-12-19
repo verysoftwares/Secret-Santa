@@ -20,7 +20,7 @@ end
 
 partimes={
 --446,842,2498,1934,20*60
-10*60,20*60,50*60,40*60,15*60
+10*60,20*60,50*60,40*60,60*60-5*60
 }
 
 SP_ELFL=81
@@ -34,6 +34,12 @@ SP_CANE=88
 SP_TREE=89
 SP_CLOUD=84
 SP_CROSS=72
+SP_EMPTY_HL=101
+SP_BOSSL=67
+SP_BOSSR=SP_BOSSL-16
+SP_BOSSGIFTL=SP_BOSSL+1
+SP_BOSSGIFTR=SP_BOSSL+1-16
+SP_GIFT2=SP_GIFT-16
 
 t=0
 x=96
@@ -44,128 +50,129 @@ santadx=1
 santas=3
 
 function generate()
-    lanes={
-      {},
-      {},
-      {},
-      {},
-    }
-    for i=1,4 do
-    local c=0
-    local rpos
-    if lvl==1 then    
-      -- insert random elf
-      while i==1 and c<1 do
-        repeat
-        rpos=math.random(1,math.floor(240/8/i+0.5))
-        until not lanes[i][rpos] and not (i==santay and rpos==santax)
-        lanes[i][rpos]=SP_ELFR+math.random(0,1)*16
-        c=c+1
-      end
-      
-      c=0
-      -- insert two random gifts
-      -- on separate lanes
-      while (i==2 or i==3) and c<1 do
-        repeat
-        rpos=math.random(1,math.floor(240/8/i+0.5))
-        until not lanes[i][rpos] and not (i==santay and rpos==santax)
-        lanes[i][rpos]=SP_GIFT
-        c=c+1
-      end
+  lanes={
+    {},
+    {},
+    {},
+    {},
+  }
+  for i=1,4 do
+  local c=0
+  local rpos
+  if lvl==1 then    
+    -- insert random elf
+    while i==1 and c<1 do
+      repeat
+      rpos=math.random(1,math.floor(240/8/i+0.5))
+      until not lanes[i][rpos] and not (i==santay and rpos==santax)
+      lanes[i][rpos]=SP_ELFR+math.random(0,1)*16
+      c=c+1
     end
-    if lvl==2 then
-      while (i==1 and c<2) or (i==2 and c<1) do
-        repeat
-        rpos=math.random(1,math.floor(240/8/i+0.5))
-        until not lanes[i][rpos] and not (i==santay and rpos==santax)
-        lanes[i][rpos]=SP_ELFR+math.random(0,1)*16
-        c=c+1
-      end
-      
-      c=0
-      while ((i==1 or i==2) and c<2) or ((i==3 or i==4) and c<1) do
-        repeat
-        rpos=math.random(1,math.floor(240/8/i+0.5))
-        until not lanes[i][rpos] and not (i==santay and rpos==santax)
-        lanes[i][rpos]=SP_GIFT
-        c=c+1
-      end    
-    end
-    if lvl==3 then
-      -- old method of generation
-      --for j=0,240/i-1,8 do
-        --local sp=SP_EMPTY
-        --if math.random()<0.15 then sp=SP_GIFT
-        --elseif math.random()<0.15 then sp=SP_ELFL-math.random(0,1)*16 end
-        --table.insert(lanes[i],sp)
-      --end
-      
-      -- new method of generation
-
-      -- insert random elves
-      -- 3 in lane 1, 2 in lane 2, 1 in lane 3, 0 in lane 4
-      while c<4-i do
-        repeat
-        rpos=math.random(1,math.floor(240/8/i+0.5))
-        until not lanes[i][rpos] and not (i==santay and rpos==santax)
-        lanes[i][rpos]=SP_ELFR+math.random(0,1)*16
-        c=c+1
-      end
     
-      -- insert random gifts
-      -- 4 in lane 1, 3 in lane 2, 2 in lane 3, 1 in lane 4
-      c=0
-      while c<4-i+1 do
-        repeat
-        rpos=math.random(1,math.floor(240/8/i+0.5))
-        until not lanes[i][rpos] and not (i==santay and rpos==santax)
-        lanes[i][rpos]=SP_GIFT
-        c=c+1
-      end
+    c=0
+    -- insert two random gifts
+    -- on separate lanes
+    while (i==2 or i==3) and c<1 do
+      repeat
+      rpos=math.random(1,math.floor(240/8/i+0.5))
+      until not lanes[i][rpos] and not (i==santay and rpos==santax)
+      lanes[i][rpos]=SP_GIFT
+      c=c+1
     end
-    if lvl==4 then
-      while c<4-i+1 do
-        repeat
-        rpos=math.random(1,math.floor(240/8/i+0.5))
-        until not lanes[i][rpos] and not (i==santay and rpos==santax)
-        lanes[i][rpos]=SP_ELFR+math.random(0,1)*16
-        -- no instakills
-        if i==4 and rpos==2 and lanes[i][rpos]==SP_ELFL then lanes[i][rpos]=SP_ELFR end
-        if i==4 and rpos==8 and lanes[i][rpos]==SP_ELFR then lanes[i][rpos]=SP_ELFL end
-        c=c+1
-      end
-      
-      c=0
-      while (i==4 and c<1) do
-        repeat
-        rpos=math.random(1,math.floor(240/8/i+0.5))
-        until not lanes[i][rpos] and not (i==santay and rpos==santax)
-        lanes[i][rpos]=SP_GIFT
-        c=c+1
-      end    
+  end
+  if lvl==2 then
+    while (i==1 and c<2) or (i==2 and c<1) do
+      repeat
+      rpos=math.random(1,math.floor(240/8/i+0.5))
+      until not lanes[i][rpos] and not (i==santay and rpos==santax)
+      lanes[i][rpos]=SP_ELFR+math.random(0,1)*16
+      c=c+1
     end
-    if lvl==5 then
-      while i==4 and c<1 do
-        repeat
-        rpos=math.random(1,math.floor(240/8/i+0.5))
-        until not lanes[i][rpos] and not (i==santay and rpos==santax)
-        lanes[i][rpos]=SP_ELFR+math.random(0,1)*16
-        -- no instakills
-        if i==4 and rpos==2 and lanes[i][rpos]==SP_ELFL then lanes[i][rpos]=SP_ELFR end
-        if i==4 and rpos==8 and lanes[i][rpos]==SP_ELFR then lanes[i][rpos]=SP_ELFL end
-        c=c+1
-      end
-      
-      c=0
-      while ((i<4 and c<4) or (i==4 and c<3)) do
-        repeat
-        rpos=math.random(1,math.floor(240/8/i+0.5))
-        until not lanes[i][rpos] and not (i==santay and rpos==santax)
-        lanes[i][rpos]=SP_GIFT
-        c=c+1
-      end    
+    
+    c=0
+    while ((i==1 or i==2) and c<2) or ((i==3 or i==4) and c<1) do
+      repeat
+      rpos=math.random(1,math.floor(240/8/i+0.5))
+      until not lanes[i][rpos] and not (i==santay and rpos==santax)
+      lanes[i][rpos]=SP_GIFT
+      c=c+1
+    end    
+  end
+  if lvl==3 then
+    -- old method of generation
+    --for j=0,240/i-1,8 do
+      --local sp=SP_EMPTY
+      --if math.random()<0.15 then sp=SP_GIFT
+      --elseif math.random()<0.15 then sp=SP_ELFL-math.random(0,1)*16 end
+      --table.insert(lanes[i],sp)
+    --end
+    
+    -- new method of generation
+
+    -- insert random elves
+    -- 3 in lane 1, 2 in lane 2, 1 in lane 3, 0 in lane 4
+    while c<4-i do
+      repeat
+      rpos=math.random(1,math.floor(240/8/i+0.5))
+      until not lanes[i][rpos] and not (i==santay and rpos==santax)
+      lanes[i][rpos]=SP_ELFR+math.random(0,1)*16
+      c=c+1
     end
+  
+    -- insert random gifts
+    -- 4 in lane 1, 3 in lane 2, 2 in lane 3, 1 in lane 4
+    c=0
+    while c<4-i+1 do
+      repeat
+      rpos=math.random(1,math.floor(240/8/i+0.5))
+      until not lanes[i][rpos] and not (i==santay and rpos==santax)
+      lanes[i][rpos]=SP_GIFT
+      c=c+1
+    end
+  end
+  if lvl==4 then
+    while c<4-i+1 do
+      repeat
+      rpos=math.random(1,math.floor(240/8/i+0.5))
+      until not lanes[i][rpos] and not (i==santay and rpos==santax)
+      lanes[i][rpos]=SP_ELFR+math.random(0,1)*16
+      -- no instakills
+      if i==4 and rpos==2 and lanes[i][rpos]==SP_ELFL then lanes[i][rpos]=SP_ELFR end
+      if i==4 and rpos==8 and lanes[i][rpos]==SP_ELFR then lanes[i][rpos]=SP_ELFL end
+      c=c+1
+    end
+    
+    c=0
+    while (i==4 and c<1) do
+      repeat
+      rpos=math.random(1,math.floor(240/8/i+0.5))
+      until not lanes[i][rpos] and not (i==santay and rpos==santax)
+      lanes[i][rpos]=SP_GIFT
+      c=c+1
+    end    
+  end
+  if lvl==5 then
+    while i==4 and c<1 do
+      repeat
+      rpos=math.random(1,math.floor(240/8/i+0.5))
+      until not lanes[i][rpos] and not (i==santay and rpos==santax)
+      lanes[i][rpos]=SP_BOSSR+math.random(0,1)*16
+      -- no instakills
+      if i==4 and rpos==2 and lanes[i][rpos]==SP_BOSSL then lanes[i][rpos]=SP_BOSSR end
+      if i==4 and rpos==8 and lanes[i][rpos]==SP_BOSSR then lanes[i][rpos]=SP_BOSSL end
+      boss={x=rpos,y=i,hp=4}
+      c=c+1
+    end
+    
+    c=0
+    while ((i<4 and c<4) or (i==4 and c<3)) do
+      repeat
+      rpos=math.random(1,math.floor(240/8/i+0.5))
+      until not lanes[i][rpos] and not (i==santay and rpos==santax)
+      lanes[i][rpos]=SP_GIFT
+      c=c+1
+    end    
+  end
   -- fill the rest with SP_EMPTYs
   for j=1,math.floor(240/8/i+0.5) do
     if not lanes[i][j] then lanes[i][j]=SP_EMPTY end
@@ -222,12 +229,12 @@ function santa_input()
   -- throw with Z
   if btnp(4) and gift then
     if pack[SP_CANE]>0 then
-      if giftshotx and pmem(11)==0 and not info11 then
+      if giftshot.x and pmem(11)==0 and not info11 then
       TIC=infotext('You can only throw 1 gift at a time.')
       pmem(11,1)
       info11=true
       end
-      giftshotx=santax; giftshoty=santay; giftshotdx=santadx
+      giftshot.x=santax; giftshot.y=santay; giftshot.dx=santadx
       gift=gift-1
       if gift<=0 then gift=nil end
       timer=maxtimer
@@ -259,7 +266,7 @@ function santa_parallax(dir)
   santay=santay+dir; 
   timer=maxtimer; hilightx=nil; hilighty=nil 
   local step=lanes[santay][santax]
-  if step==SP_ELFL or step==SP_ELFR then
+  if is_elf(step) then
     hilightx=santax; hilighty=santay
     santax=prevx; santay=santay-dir
     return false
@@ -275,7 +282,6 @@ function santa_parallax(dir)
   elseif pack[SP_TREE]>0 then
     add_pack(SP_TREE,-1)
   else
-    hilightx=santax; hilighty=santay
     santax=prevx; santay=santay-dir
     table.insert(labels,{x=santax,y=santay,id=SP_TREE,count=0,t=t})
     return false
@@ -315,8 +321,11 @@ function advance_timer()
     elf_cor=nil
   end
 
-  if giftshotx and t%6==0 then
-    gift_advance()
+  if giftshot.x and t%6==0 then
+    gift_advance(giftshot)
+  end
+  if bossgiftshot.x and t%6==0 then
+    gift_advance(bossgiftshot)
   end
 
   if timer<8 then hilightx=nil; hilighty=nil end
@@ -420,7 +429,8 @@ function nextlevel()
   lvl=lvl+1
   santax=1; santay=4; santadx=1; santas=3
   for i=SP_SOCK,SP_TREE do pack[i]=4 end
-  gift=nil; giftshotx=nil; giftshoty=nil; giftshotdx=nil
+  gift=nil; giftshot.x=nil; giftshot.y=nil; giftshot.dx=nil
+  bossgiftshot.x=nil; bossgiftshot.y=nil; bossgiftshot.dx=nil
   if pmem(255)==0 then
     if lvl>5 then
     pmem(255,1); TIC=credits; tt2=0
@@ -457,7 +467,7 @@ function santa_advance()
   if step==SP_GIFT then 
     if not gift and pack[SP_CANE]>0 then gift=1; lanes[santay][santax]=SP_EMPTY; santax=prevx; add_pack(SP_CANE,-1); if pmem(6)==0 and not info6 then TIC=infotext('Picking up gifts consumes candy canes.'); pmem(6,1); info6=true end; sfx(6,'D-5',30,3)
     else hilightx=santax; hilighty=santay; santax=prevx; if not gift and pack[SP_CANE]<=0 then table.insert(labels,{x=santax,y=santay,id=SP_CANE,count=0,t=t}) end end
-  elseif step==SP_ELFL or step==SP_ELFR then
+  elseif is_elf(step) then
     hilightx=santax; hilighty=santay
     santax=prevx
   elseif step>=SP_SOCK and step<=SP_TREE then
@@ -542,6 +552,109 @@ function elf_advance()
         end
       end
       end
+      if v==SP_BOSSL or v==SP_BOSSR or v==SP_BOSSGIFTL or v==SP_BOSSGIFTR then
+      local coll,colli
+      local dx
+      if v==SP_BOSSL or v==SP_BOSSGIFTL then
+        dx=-1
+        if j+dx<1 then
+        colli=#old_lanes[i]
+        else 
+        colli=j+dx
+        end
+      elseif v==SP_BOSSR or v==SP_BOSSGIFTR then 
+        dx=1
+        if j+dx>#old_lanes[i] then
+        colli=1
+        else
+        colli=j+dx 
+        end
+      end
+      coll=old_lanes[i][colli] 
+      
+      if coll==SP_SANTA and not fail then
+        fail=t
+        if pmem(1)==0 and not info1 then
+          TIC=infotext('Don\'t let the elves catch you!')
+          pmem(1,1)
+          info1=true
+        end
+        table.insert(labels,{x=colli,y=i,id=SP_SANTA,count=0,t=t})
+        sfx(8,'A-3',30,3)
+      elseif (v==SP_BOSSGIFTL or v==SP_BOSSGIFTR) and santay==i then
+        if santax>j and v==SP_BOSSGIFTL then lanes[i][j]=SP_BOSSGIFTR 
+        elseif santax<j and v==SP_BOSSGIFTR then lanes[i][j]=SP_BOSSGIFTL 
+        else
+        -- throw gift
+        bossgiftshot.x=j; bossgiftshot.y=i
+        if v==SP_BOSSGIFTL then bossgiftshot.dx=-1 else bossgiftshot.dx=1 end
+        if v==SP_BOSSGIFTL then lanes[i][j]=SP_BOSSL end
+        if v==SP_BOSSGIFTR then lanes[i][j]=SP_BOSSR end
+        end
+      elseif coll==SP_EMPTY and lanes[i][colli]==SP_EMPTY then
+        -- you're good to walk forward!
+        local intent=math.random(0,6)
+        local px
+        if santay<i then intent=0 end
+        if santay>i then intent=1 end
+        if intent==0 then
+          -- move further
+          if i>1 then
+          px=parallax_shift(-1,j,i,dx)
+          if old_lanes[i-1][px]==SP_EMPTY and lanes[i-1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i-1][px]=v
+          else
+          lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
+          end
+          else
+          lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
+          end
+        elseif intent==1 then
+          -- move closer
+          if i<4 then
+          px=parallax_shift(1,j,i,dx)
+          if old_lanes[i+1][px]==SP_EMPTY and lanes[i+1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i+1][px]=v 
+          else
+          lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
+          end
+          else
+          lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
+          end
+        else
+        lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
+        end
+        coroutine.yield()
+      elseif (v==SP_BOSSR or v==SP_BOSSL) and coll==SP_GIFT then
+        lanes[i][colli]=SP_EMPTY
+        if v==SP_BOSSR then lanes[i][j]=SP_BOSSGIFTR end
+        if v==SP_BOSSL then lanes[i][j]=SP_BOSSGIFTL end
+      else
+        -- collision with a solid object.
+        -- time to try dodging
+        local intent=math.random(0,2)
+        local px
+        if intent==0 then
+          -- move further
+          if i>1 then
+          px=parallax_shift(-1,j,i,dx)
+          if old_lanes[i-1][px]==SP_EMPTY and lanes[i-1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i-1][px]=v; coroutine.yield() end
+          end
+        elseif intent==1 then
+          -- move closer
+          if i<4 then
+          px=parallax_shift(1,j,i,dx)
+          if old_lanes[i+1][px]==SP_EMPTY and lanes[i+1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i+1][px]=v; coroutine.yield() end
+          end
+        elseif intent==2 then
+          -- turn around
+          if v==SP_BOSSL then
+          lanes[i][j]=SP_BOSSR
+          elseif v==SP_BOSSR then
+          lanes[i][j]=SP_BOSSL
+          end
+          coroutine.yield()
+        end
+      end
+      end
     end
   end
   end)
@@ -551,17 +664,23 @@ function elf_count()
   local out=0
   for i=1,4 do
     for j,v in ipairs(lanes[i]) do
-      if v==SP_ELFL or v==SP_ELFR then out=out+1 end
+      if is_elf(v) then out=out+1 end
     end
   end
   for j,l in ipairs(labels) do
-      if l.id==SP_ELFL or l.id==SP_ELFR then
-        out=out+1
+    if is_elf(l.id) then
+      out=out+1
     end
   end
   return out
 end
 
+function is_elf(v)
+  return v==SP_ELFL or v==SP_ELFR or v==SP_BOSSL or v==SP_BOSSR or v==SP_BOSSGIFTL or v==SP_BOSSGIFTR
+end
+
+giftshot={x=nil,y=nil,sp=SP_GIFT,dx=nil}
+bossgiftshot={x=nil,y=nil,sp=SP_GIFT2,dx=nil}
 function gift_count()
   local out=0
   for i=1,4 do
@@ -570,29 +689,40 @@ function gift_count()
     end
   end
   if gift then out=out+gift end
-  if giftshotx then out=out+1 end
+  if giftshot.x then out=out+1 end
   return out
 end
 
-function gift_advance()
-  giftshotx=giftshotx+giftshotdx; 
+function gift_advance(giftshot)
+  giftshot.x=giftshot.x+giftshot.dx; 
   sfx(5,'D-4',30,3)
-  if giftshotx>#lanes[giftshoty] then giftshotx=1--giftshotx=nil; giftshoty=nil
-  elseif giftshotx<1 then giftshotx=#lanes[giftshoty] end
-  local step=lanes[giftshoty][giftshotx]
+  if giftshot.x>#lanes[giftshot.y] then giftshot.x=1--giftshotx=nil; giftshoty=nil
+  elseif giftshot.x<1 then giftshot.x=#lanes[giftshot.y] end
+  local step=lanes[giftshot.y][giftshot.x]
+  if giftshot.sp==SP_GIFT then
   if step~=SP_EMPTY then 
-    local elf= (step==SP_ELFL) or (step==SP_ELFR)
+    local elf= is_elf(step)
     local hit=false
     if elf then
-      hit= (step==SP_ELFL and giftshotdx>0) or (step==SP_ELFR and giftshotdx<0)
+      hit= ((step==SP_ELFL or step==SP_BOSSL or step==SP_BOSSGIFTL) and giftshot.dx>0) or ((step==SP_ELFR or step==SP_BOSSR or step==SP_BOSSGIFTR) and giftshot.dx<0)
     end
     if elf and hit then
-      spawn_item(giftshotx,giftshoty)
-      table.insert(labels,{x=giftshotx,y=giftshoty,id=step,count=0,t=t})
+    		if step==SP_ELFL or step==SP_ELFR then
+      spawn_item(giftshot.x,giftshot.y)
+      table.insert(labels,{x=giftshot.x,y=giftshot.y,id=step,count=0,t=t})
       if pmem(8)==0 and not info8 then
         TIC=infotext('Nice, you hit an elf! Get \'em all!')
         pmem(8,1)
         info8=true
+      end
+      else -- boss
+        boss.hp=boss.hp-1
+        if boss.hp<=0 then
+        table.insert(labels,{x=giftshot.x,y=giftshot.y,id=step,count=0,t=t})
+        else
+        table.insert(labels,{x=giftshot.x,y=giftshot.y,id=118+boss.hp-1,count=1,t=t})
+        end
+        giftshot.x=nil; giftshot.y=nil; giftshot.dx=nil
       end
     end
     if elf and not hit then
@@ -603,14 +733,27 @@ function gift_advance()
       end
     end
     if not elf then
-      lanes[giftshoty][giftshotx]=SP_EMPTY; 
+      lanes[giftshot.y][giftshot.x]=SP_EMPTY; 
     end
     if (not elf) or (not hit) then
-    table.insert(labels,{x=giftshotx,y=giftshoty,id=SP_GIFT,count=0,t=t})
-    giftshotx=nil; giftshoty=nil; giftshotdx=nil
+    table.insert(labels,{x=giftshot.x,y=giftshot.y,id=SP_GIFT,count=0,t=t})
+    giftshot.x=nil; giftshot.y=nil; giftshot.dx=nil
     end
   elseif step==SP_EMPTY then 
-    spawn_item(giftshotx,giftshoty)
+    spawn_item(giftshot.x,giftshot.y)
+  end
+  elseif giftshot.sp==SP_GIFT2 then
+  if not fail and giftshot.x==santax and giftshot.y==santay then
+    fail=t
+    table.insert(labels,{x=giftshot.x,y=giftshot.y,id=SP_SANTA,count=0,t=t})
+    sfx(8,'A-3',30,3)  
+    giftshot.x=nil; giftshot.y=nil; giftshot.dx=nil
+  elseif step~=SP_EMPTY then 
+    lanes[giftshot.y][giftshot.x]=SP_EMPTY; 
+    giftshot.x=nil; giftshot.y=nil; giftshot.dx=nil
+  elseif step==SP_EMPTY then
+    spawn_item(giftshot.x,giftshot.y)
+  end
   end
 end
 
@@ -653,19 +796,19 @@ function render_background()
       -- preview back tile
       if not fail and i==santay-1 and j==parallax_shift(-1,santax,santay,santadx) then
         --rect((j-1)*(8*i)+offx,ly,i*8,i*8,4)
-        sp=101
+        sp=SP_EMPTY_HL
       end
       -- preview front tile
       if not fail and i==santay+1 and j==parallax_shift(1,santax,santay,santadx) then
         --rect((j-1)*(8*i)+offx,ly,i*8,i*8,5)
-        sp=101
+        sp=SP_EMPTY_HL
       end
       spr(sp,(j-1)*(8*i),ly,0,i)
       coroutine.yield()
       end
     end
     for j,v in ipairs(lanes[i]) do
-      if v~=SP_EMPTY or (i==santay and j==santax) then
+      if v~=SP_EMPTY or (i==santay and j==santax and not fail) then
       local offx=0--t*(i*0.25)%(8*i)
       local flip=0
       local sp=v
@@ -683,7 +826,17 @@ function render_background()
         spr(SP_GIFT,(j-1)*(8*i)+offx-i,ly-8*i-i,0,i)
         end
       end
-      if giftshoty==i and giftshotx==j then sp=SP_GIFT end
+      if v==SP_BOSSGIFTL or v==SP_BOSSGIFTR then
+        for i=0,15 do pal(i,0) end
+        spr(SP_GIFT2,(j-1)*(8*i)+offx-i+i,ly-8*i-i,0,i)
+        spr(SP_GIFT2,(j-1)*(8*i)+offx-i-i,ly-8*i-i,0,i)
+        spr(SP_GIFT2,(j-1)*(8*i)+offx-i,ly-8*i-i+i,0,i)
+        spr(SP_GIFT2,(j-1)*(8*i)+offx-i,ly-8*i-i-i,0,i)
+        pal()
+        spr(SP_GIFT2,(j-1)*(8*i)+offx-i,ly-8*i-i,0,i)
+      end
+      if giftshot.y==i and giftshot.x==j then sp=SP_GIFT end
+      if bossgiftshot.y==i and bossgiftshot.x==j then sp=SP_GIFT2 end
       if (sp==SP_SANTA or sp==SP_SANTAGIFT) and santadx<0 then flip=1 end
       if sp~=SP_EMPTY then
       for i=0,15 do pal(i,0) end
@@ -974,13 +1127,15 @@ function modal()
   elseif lvl==4 then
   msg='AI: intelligent'
   elseif lvl==5 then
-  if t%maxtimer<maxtimer/2 then msg='AI: throwers' else msg='' end
+  if t%maxtimer<maxtimer/2 then msg='AI: boss' else msg='' end
   end
   tw=print(msg,0,-6)
   print(msg,240/2-tw/2,136-8-32,12)
   rectb(240/2-20*2,136-8-12-12,18*2,10*2,12)
   rectb(240/2+2,136-8-12-12,18*2,10*2,12)
-  spr(SP_ELFR,240/2-20*2+2,136-8-12-12+2,0,2)
+  local sp=SP_ELFR
+  if lvl==5 then sp=SP_BOSSR end
+  spr(sp,240/2-20*2+2,136-8-12-12+2,0,2)
   spr(SP_GIFT,240/2+2+2,136-8-12-12+2,0,2)
   print(string.format('x%X',elf_count()),240/2-20*2+2+16+2+1,136-8-12-12+2+6,12)
   print(string.format('x%X',gift_count()),240/2+2+2+16+2+1,136-8-12-12+2+6,12)
@@ -1045,7 +1200,9 @@ function challenge()
     coroutine.yield()
     rectb(40+tw+8+18*2+4+offx,24+(i-1)*24-4-1+offy,18*2,10*2,12)
     coroutine.yield()
-    spr(SP_ELFR,40+tw+8+1+1+offx,24+(i-1)*24+1-4+1-1+offy,0,2)
+    local sp=SP_ELFR
+    if i==5 then sp=SP_BOSSR end
+    spr(sp,40+tw+8+1+1+offx,24+(i-1)*24+1-4+1-1+offy,0,2)
     coroutine.yield()
     spr(SP_GIFT,40+tw+8+18*2+4+1+1+offx,24+(i-1)*24+1-4+1-1+offy,0,2)
     coroutine.yield()
@@ -1131,6 +1288,9 @@ end
 -- 103:00000000000cc00000cccc000cccccc0000cc000000cc000000cc00000000000
 -- 104:000cc00000cccc000cccccc0000cc000000cc000000cc0000000000000000000
 -- 113:c22222200cc224440cc22e4e0cc2244400c222cc0002222c0002222c00022220
+-- 118:000cc0000cccc0000cccc000000cc000000cc000000cc0000cccccc00cccccc0
+-- 119:00cccc000cccccc00cc00cc00000ccc0000ccc0000ccc0000cccccc00cccccc0
+-- 120:00cccc000cccccc00cc00cc00000ccc00000cc000cc00cc00cccccc000cccc00
 -- </TILES>
 
 -- <WAVES>
