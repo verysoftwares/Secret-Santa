@@ -19,7 +19,8 @@ function MENU(i)
 end
 
 partimes={
-446,842,2498,1934,20*60
+--446,842,2498,1934,20*60
+10*60,20*60,50*60,40*60,15*60
 }
 
 SP_ELFL=81
@@ -990,10 +991,9 @@ end
 
 records={
 }
-for i=1,5 do records[i]=pmem(255-(i)); if records[i]==0 then records[i]=partimes[i] end end
+for i=1,5 do records[i]=pmem(255-(i)) end
 
 cha=1
-lvl=cha; generate()
 t4=0
 function challenge()
   local cha_cor= coroutine.create(function()
@@ -1056,7 +1056,7 @@ function challenge()
     --end
   end
   
-  if btnp(4) or (t>0 and keyp(50)) then lvl=cha; generate(); t=-1; tt=0; loaded=false; labels={}; TIC=ssanta; t4=-1 end
+  if btnp(4) or (t>0 and keyp(50)) then lvl=cha; generate(); t=0; tt=0; loaded=false; labels={}; TIC=ssanta; t4=-1 end
 
   end)
 
