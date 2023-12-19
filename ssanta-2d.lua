@@ -21,7 +21,6 @@ end
 partimes={
 446,842,2498,1934,20*60
 }
---for 
 
 SP_ELFL=81
 SP_ELFR=SP_ELFL-16
