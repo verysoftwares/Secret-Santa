@@ -1,6 +1,8 @@
 # Secret Santa (v2.d)
  
-latest update: https://verysoftwares.itch.io/1ssantaexe/devlog/652532/challenge-mode-and-developer-mode-18-dec-23
+latest updates: 
+* (19 Dec 23) https://verysoftwares.itch.io/1ssantaexe/devlog/652656/level-5-and-all-it-entails
+* (18 Dec 23) https://verysoftwares.itch.io/1ssantaexe/devlog/652532/challenge-mode-and-developer-mode-18-dec-23
 
 instructions for running with TIC-80:
 * download http://tic80.com
