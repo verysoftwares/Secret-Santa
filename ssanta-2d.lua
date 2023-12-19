@@ -221,6 +221,11 @@ function santa_input()
   -- throw with Z
   if btnp(4) and gift then
     if pack[SP_CANE]>0 then
+      if giftshotx and pmem(11)==0 and not info11 then
+      TIC=infotext('You can only throw 1 gift at a time.')
+      pmem(11,1)
+      info11=true
+      end
       giftshotx=santax; giftshoty=santay; giftshotdx=santadx
       gift=gift-1
       if gift<=0 then gift=nil end
