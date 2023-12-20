@@ -189,7 +189,8 @@ maxtimer=36
 timer=maxtimer
 
 function ssanta()
-  music2()
+  if lvl<5 then music2()
+  else bossmusic() end
 
   santa_input()
   advance_timer()
@@ -1146,7 +1147,7 @@ function modal()
   print(string.format('x%X',elf_count()),240/2-20*2+2+16+2+1,136-8-12-12+2+6,12)
   print(string.format('x%X',gift_count()),240/2+2+2+16+2+1,136-8-12-12+2+6,12)
   end
-  if btnp(4) then loaded=false; t=-1; tt=0; labels={}; TIC=ssanta end
+  if btnp(4) then loaded=false; t=-1; tt=0; rt=0; labels={}; TIC=ssanta end
   reset_save()
   t=t+1
 end
@@ -1220,7 +1221,7 @@ function challenge()
     --end
   end
   
-  if btnp(4) or (t>0 and keyp(50)) then lvl=cha; generate(); t=0; tt=0; loaded=false; labels={}; TIC=ssanta; t4=-1 end
+  if btnp(4) or (t>0 and keyp(50)) then lvl=cha; generate(); t=0; tt=0; rt=0; loaded=false; labels={}; TIC=ssanta; t4=-1 end
 
   end)
 
@@ -1247,6 +1248,15 @@ function music4()
   if tt3==90-1 and rt3<1 then tt3=0; rt3=rt3+1 end
   if tt3==90+9*8*4*4-9*8*2-9*4-1 then tt3=-1; rt3=0 end
   tt3=tt3+1
+end
+
+function bossmusic()
+  tt=tt or 0
+  rt=rt or 0
+  if tt%(tt%12+1)%24==0 then
+    sfx(1,12*3+tt%15+tt%17,20,0)
+  end
+  tt=tt+1
 end
 
 -- palette swapping by borbware
