@@ -389,7 +389,7 @@ end
 function reset_save()
   -- for actual clearing of memory
   -- press Shift+R
-  if flag_empty_pmem or (key(18) and key(64)) then
+  if flag_empty_pmem or (key(64) and keyp(18)) then
     for j=0,255 do pmem(j,0) end
     for i=1,5 do records[i]=pmem(255-i) end
     trace('Save reset.',8)
@@ -1289,12 +1289,12 @@ end
 -- 020:ccca00ccaaaa0ccecaaa0ceeaaaa0ceeaaaa0cee8888ccee000cceeecccceeee
 -- 023:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 -- 024:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
--- 037:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
--- 038:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+-- 037:1111111111111111111111111111111111111111111111111111111111111111
+-- 038:1111111111111111111111111111111111111111111111111111111111111111
 -- 051:5999999009999444099996460099944405599955055999950559999500099990
 -- 052:5999999005599444055996460559944400599955000999950009999500099990
--- 053:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
--- 054:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+-- 053:1111111111111111111111111111111111111111111111111111111111111111
+-- 054:1111111111111111111111111111111111111111111111111111111111111111
 -- 065:566666600666644406666a4a0066644405566655055666650556666500066660
 -- 066:566666600556644405566a4a0556644400566655000666650006666500066660
 -- 067:0999999544499990646999904449990055999550599995505999955009999000
