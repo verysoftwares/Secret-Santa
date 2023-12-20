@@ -12,7 +12,7 @@
 -- from Esc -> Game Menu,
 -- removing the Challenge mode.
 function MENU(i)
-  for j=0,255 do pmem(j,0); flag_empty_pmem=true end
+  flag_empty_pmem=true
   for k=1,5 do
     records[k]=partimes[k]
   end
@@ -302,6 +302,7 @@ end
 
 --t2=0
 function advance_timer()
+  reset_save()
   if not loaded then return end
     
   timer=timer-1
@@ -384,8 +385,6 @@ function global_timer_events()
       end
     end
   end
-  
-  reset_save()
 end
 
 function reset_save()
