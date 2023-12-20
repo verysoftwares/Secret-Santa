@@ -5,7 +5,7 @@
 -- license: MIT
 -- script:  lua
 -- saveid:  1SSANTA
--- menu:    ClearSaveFile
+-- menu:    Clear	save	file
 
 -- developer mode: 
 -- you can clear your save file
@@ -322,11 +322,9 @@ function advance_timer()
     elf_cor=nil
   end
 
-  if giftshot.x and t%6==0 then
-    gift_advance(giftshot)
-  end
-  if bossgiftshot.x and t%6==0 then
-    gift_advance(bossgiftshot)
+  if t%6==0 then
+    if giftshot.x then gift_advance(giftshot) end
+    if bossgiftshot.x then gift_advance(bossgiftshot) end
   end
 
   if timer<8 then hilightx=nil; hilighty=nil end
@@ -493,21 +491,7 @@ function elf_advance()
       if v==SP_ELFL or v==SP_ELFR then
       local coll,colli
       local dx
-      if v==SP_ELFL then
-        dx=-1
-        if j+dx<1 then
-        colli=#old_lanes[i]
-        else 
-        colli=j+dx
-        end
-      elseif v==SP_ELFR then 
-        dx=1
-        if j+dx>#old_lanes[i] then
-        colli=1
-        else
-        colli=j+dx 
-        end
-      end
+      dx,colli=elf_walk(v,j,old_lanes)
       coll=old_lanes[i][colli] 
       
       if coll==SP_SANTA and not fail then
@@ -527,38 +511,13 @@ function elf_advance()
         local intent=math.random(0,8)
         local px
         if intent==0 then
-          -- move further
-          if i>1 then
-          px=parallax_shift(-1,j,i,dx)
-          if old_lanes[i-1][px]==SP_EMPTY and lanes[i-1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i-1][px]=v; coroutine.yield() 
-          else
-          lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
+          elf_parallax(-1,v,i,j,colli,old_lanes,dx,true)
           coroutine.yield()
-          end
-          else
-          lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
-          coroutine.yield()
-          end
         elseif intent==1 then
-          -- move closer
-          if i<4 then
-          px=parallax_shift(1,j,i,dx)
-          if old_lanes[i+1][px]==SP_EMPTY and lanes[i+1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i+1][px]=v; coroutine.yield()
-          else
-          lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
+          elf_parallax(1,v,i,j,colli,old_lanes,dx,true)
           coroutine.yield()
-          end
-          else
-          lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
-          coroutine.yield()
-          end
         elseif intent==2 then
-          -- turn around
-          if v==SP_ELFL then
-          lanes[i][j]=SP_ELFR
-          elseif v==SP_ELFR then
-          lanes[i][j]=SP_ELFL
-          end
+          elf_turn(v,i,j)
           coroutine.yield()
         else
         lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
@@ -574,46 +533,19 @@ function elf_advance()
         local intent=math.random(0,2)
         local px
         if intent==0 then
-          -- move further
-          if i>1 then
-          px=parallax_shift(-1,j,i,dx)
-          if old_lanes[i-1][px]==SP_EMPTY and lanes[i-1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i-1][px]=v; coroutine.yield() end
-          end
+          elf_parallax(-1,v,i,j,colli,old_lanes,dx,false)
         elseif intent==1 then
-          -- move closer
-          if i<4 then
-          px=parallax_shift(1,j,i,dx)
-          if old_lanes[i+1][px]==SP_EMPTY and lanes[i+1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i+1][px]=v; coroutine.yield() end
-          end
+          elf_parallax(1,v,i,j,colli,old_lanes,dx,false)
         elseif intent==2 then
-          -- turn around
-          if v==SP_ELFL then
-          lanes[i][j]=SP_ELFR
-          elseif v==SP_ELFR then
-          lanes[i][j]=SP_ELFL
-          end
-          coroutine.yield()
+          elf_turn(v,i,j)
         end
+        coroutine.yield()
       end
       end
       if v==SP_BOSSL or v==SP_BOSSR or v==SP_BOSSGIFTL or v==SP_BOSSGIFTR then
       local coll,colli
       local dx
-      if v==SP_BOSSL or v==SP_BOSSGIFTL then
-        dx=-1
-        if j+dx<1 then
-        colli=#old_lanes[i]
-        else 
-        colli=j+dx
-        end
-      elseif v==SP_BOSSR or v==SP_BOSSGIFTR then 
-        dx=1
-        if j+dx>#old_lanes[i] then
-        colli=1
-        else
-        colli=j+dx 
-        end
-      end
+      dx,colli=elf_walk(v,j,old_lanes)
       coll=old_lanes[i][colli] 
       
       if coll==SP_SANTA and not fail then
@@ -642,27 +574,9 @@ function elf_advance()
         if (v==SP_BOSSGIFTL or v==SP_BOSSGIFTR) and santay<i then intent=0 end
         if (v==SP_BOSSGIFTL or v==SP_BOSSGIFTR) and santay>i then intent=1 end
         if intent==0 then
-          -- move further
-          if i>1 then
-          px=parallax_shift(-1,j,i,dx)
-          if old_lanes[i-1][px]==SP_EMPTY and lanes[i-1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i-1][px]=v
-          else
-          lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
-          end
-          else
-          lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
-          end
+          elf_parallax(-1,v,i,j,colli,old_lanes,dx,true)
         elseif intent==1 then
-          -- move closer
-          if i<4 then
-          px=parallax_shift(1,j,i,dx)
-          if old_lanes[i+1][px]==SP_EMPTY and lanes[i+1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i+1][px]=v 
-          else
-          lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
-          end
-          else
-          lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
-          end
+          elf_parallax(1,v,i,j,colli,old_lanes,dx,true)
         else
         lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
         end
@@ -677,35 +591,62 @@ function elf_advance()
         local intent=math.random(0,2)
         local px
         if intent==0 then
-          -- move further
-          if i>1 then
-          px=parallax_shift(-1,j,i,dx)
-          if old_lanes[i-1][px]==SP_EMPTY and lanes[i-1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i-1][px]=v; coroutine.yield() end
-          end
+          elf_parallax(-1,v,i,j,colli,old_lanes,dx,false)
         elseif intent==1 then
-          -- move closer
-          if i<4 then
-          px=parallax_shift(1,j,i,dx)
-          if old_lanes[i+1][px]==SP_EMPTY and lanes[i+1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i+1][px]=v; coroutine.yield() end
-          end
+          elf_parallax(1,v,i,j,colli,old_lanes,dx,false)
         elseif intent==2 then
-          -- turn around
-          if v==SP_BOSSL then
-          lanes[i][j]=SP_BOSSR
-          elseif v==SP_BOSSR then
-          lanes[i][j]=SP_BOSSL
-          elseif v==SP_BOSSGIFTL then
-          lanes[i][j]=SP_BOSSGIFTR
-          elseif v==SP_BOSSGIFTR then
-          lanes[i][j]=SP_BOSSGIFTL
-          end
-          coroutine.yield()
+          elf_turn(v,i,j)
         end
+        coroutine.yield()
       end
       end
     end
   end
   end)
+end
+
+function elf_walk(v,j,old_lanes)
+  local dx,colli
+  if v==SP_ELFL or v==SP_BOSSL or v==SP_BOSSGIFTL then
+    dx=-1
+    if j+dx<1 then
+    colli=#old_lanes[i]
+    else 
+    colli=j+dx
+    end
+  elseif v==SP_ELFR or v==SP_BOSSR or v==SP_BOSSGIFTR then 
+    dx=1
+    if j+dx>#old_lanes[i] then
+    colli=1
+    else
+    colli=j+dx 
+    end
+  end
+  return dx,colli
+end
+
+function elf_turn(v,i,j)
+  if v==SP_BOSSL then
+  lanes[i][j]=SP_BOSSR
+  elseif v==SP_BOSSR then
+  lanes[i][j]=SP_BOSSL
+  elseif v==SP_BOSSGIFTL then
+  lanes[i][j]=SP_BOSSGIFTR
+  elseif v==SP_BOSSGIFTR then
+  lanes[i][j]=SP_BOSSGIFTL
+  end
+end
+
+function elf_parallax(dir,v,i,j,colli,old_lanes,dx,safe_walk)
+  if (dir<0 and i>1) or (dir>0 and i<4) then
+  px=parallax_shift(dir,j,i,dx)
+  if old_lanes[i+dir][px]==SP_EMPTY and lanes[i+dir][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i+dir][px]=v
+  else
+  if safe_walk then lanes[i][j]=SP_EMPTY; lanes[i][colli]=v end
+  end
+  else
+  if safe_walk then lanes[i][j]=SP_EMPTY; lanes[i][colli]=v end
+  end
 end
 
 function elf_count()
