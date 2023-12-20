@@ -758,7 +758,7 @@ function gift_advance(giftshot)
       hit= ((step==SP_ELFL or step==SP_BOSSL or step==SP_BOSSGIFTL) and giftshot.dx>0) or ((step==SP_ELFR or step==SP_BOSSR or step==SP_BOSSGIFTR) and giftshot.dx<0)
     end
     if elf and hit then
-    		if step==SP_ELFL or step==SP_ELFR then
+      if step==SP_ELFL or step==SP_ELFR then
       spawn_item(giftshot.x,giftshot.y)
       table.insert(labels,{x=giftshot.x,y=giftshot.y,id=step,count=0,t=t})
       if pmem(8)==0 and not info8 then
