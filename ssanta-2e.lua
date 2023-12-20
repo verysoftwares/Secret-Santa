@@ -511,12 +511,15 @@ function elf_advance()
         local intent=math.random(0,8)
         local px
         if intent==0 then
+          -- move further
           elf_parallax(-1,v,i,j,colli,old_lanes,dx,true)
           coroutine.yield()
         elseif intent==1 then
+          -- move closer
           elf_parallax(1,v,i,j,colli,old_lanes,dx,true)
           coroutine.yield()
         elseif intent==2 then
+          -- turn around
           elf_turn(v,i,j)
           coroutine.yield()
         else
