@@ -650,6 +650,10 @@ function elf_advance()
           lanes[i][j]=SP_BOSSR
           elseif v==SP_BOSSR then
           lanes[i][j]=SP_BOSSL
+          elseif v==SP_BOSSGIFTL then
+          lanes[i][j]=SP_BOSSGIFTR
+          elseif v==SP_BOSSGIFTR then
+          lanes[i][j]=SP_BOSSGIFTL
           end
           coroutine.yield()
         end
