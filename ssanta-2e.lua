@@ -735,10 +735,12 @@ function gift_count()
   for i=1,4 do
     for j,v in ipairs(lanes[i]) do
       if v==SP_GIFT then out=out+1 end
+      if v==SP_BOSSGIFTR or v==SP_BOSSGIFTL then out=out+1 end
     end
   end
   if gift then out=out+gift end
   if giftshot.x then out=out+1 end
+  if bossgiftshot.x then out=out+1 end
   return out
 end
 
