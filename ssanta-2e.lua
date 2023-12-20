@@ -522,8 +522,53 @@ function elf_advance()
         sfx(8,'A-3',30,3)
       elseif coll==SP_EMPTY and lanes[i][colli]==SP_EMPTY then
         -- you're good to walk forward!
+        -- but in later levels, the AI might
+        -- decide to pivot.
+        if lvl>=3 then
+        local intent=math.random(0,8)
+        local px
+        if intent==0 then
+          -- move further
+          if i>1 then
+          px=parallax_shift(-1,j,i,dx)
+          if old_lanes[i-1][px]==SP_EMPTY and lanes[i-1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i-1][px]=v; coroutine.yield() 
+          else
+          lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
+          coroutine.yield()
+          end
+          else
+          lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
+          coroutine.yield()
+          end
+        elseif intent==1 then
+          -- move closer
+          if i<4 then
+          px=parallax_shift(1,j,i,dx)
+          if old_lanes[i+1][px]==SP_EMPTY and lanes[i+1][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i+1][px]=v; coroutine.yield()
+          else
+          lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
+          coroutine.yield()
+          end
+          else
+          lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
+          coroutine.yield()
+          end
+        elseif intent==2 then
+          -- turn around
+          if v==SP_ELFL then
+          lanes[i][j]=SP_ELFR
+          elseif v==SP_ELFR then
+          lanes[i][j]=SP_ELFL
+          end
+          coroutine.yield()
+        else
         lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
         coroutine.yield()
+        end
+        else
+        lanes[i][j]=SP_EMPTY; lanes[i][colli]=v
+        coroutine.yield()
+        end
       else
         -- collision with a solid object.
         -- time to try dodging
@@ -1266,12 +1311,20 @@ end
 -- 002:ccccceee8888cceeaaaa0cee888a0ceeccca0ccc0cca0c0c0cca0c0c0cca0c0c
 -- 003:eccccccccc888888caaaaaaaca888888cacccccccacccccccacc0ccccacc0ccc
 -- 004:ccccceee8888cceeaaaa0cee888a0ceeccca0cccccca0c0c0cca0c0c0cca0c0c
+-- 007:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+-- 008:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 -- 017:cacccccccaaaaaaacaaacaaacaaaaccccaaaaaaac8888888cc000cccecccccec
 -- 018:ccca00ccaaaa0ccecaaa0ceeaaaa0ceeaaaa0cee8888ccee000cceeecccceeee
 -- 019:cacccccccaaaaaaacaaacaaacaaaaccccaaaaaaac8888888cc000cccecccccec
 -- 020:ccca00ccaaaa0ccecaaa0ceeaaaa0ceeaaaa0cee8888ccee000cceeecccceeee
+-- 023:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+-- 024:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+-- 037:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+-- 038:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 -- 051:5999999009999444099996460099944405599955055999950559999500099990
 -- 052:5999999005599444055996460559944400599955000999950009999500099990
+-- 053:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+-- 054:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 -- 065:566666600666644406666a4a0066644405566655055666650556666500066660
 -- 066:566666600556644405566a4a0556644400566655000666650006666500066660
 -- 067:0999999544499990646999904449990055999550599995505999955009999000
