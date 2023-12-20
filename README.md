@@ -6,5 +6,5 @@ latest updates:
 
 instructions for running with TIC-80:
 * download http://tic80.com
-* download the .tic file above: https://github.com/verysoftwares/Secret-Santa/blob/main/ssanta-2d.tic
+* download the .tic file above: https://github.com/verysoftwares/Secret-Santa/blob/main/ssanta-2e.tic
 * merge them (run .tic in executable)
