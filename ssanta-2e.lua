@@ -491,7 +491,7 @@ function elf_advance()
       if v==SP_ELFL or v==SP_ELFR then
       local coll,colli
       local dx
-      dx,colli=elf_walk(v,j,old_lanes)
+      dx,colli=elf_walk(v,j,i,old_lanes)
       coll=old_lanes[i][colli] 
       
       if coll==SP_SANTA and not fail then
@@ -545,7 +545,7 @@ function elf_advance()
       if v==SP_BOSSL or v==SP_BOSSR or v==SP_BOSSGIFTL or v==SP_BOSSGIFTR then
       local coll,colli
       local dx
-      dx,colli=elf_walk(v,j,old_lanes)
+      dx,colli=elf_walk(v,j,i,old_lanes)
       coll=old_lanes[i][colli] 
       
       if coll==SP_SANTA and not fail then
@@ -605,7 +605,7 @@ function elf_advance()
   end)
 end
 
-function elf_walk(v,j,old_lanes)
+function elf_walk(v,j,i,old_lanes)
   local dx,colli
   if v==SP_ELFL or v==SP_BOSSL or v==SP_BOSSGIFTL then
     dx=-1
@@ -638,6 +638,7 @@ function elf_turn(v,i,j)
 end
 
 function elf_parallax(dir,v,i,j,colli,old_lanes,dx,safe_walk)
+  local px
   if (dir<0 and i>1) or (dir>0 and i<4) then
   px=parallax_shift(dir,j,i,dx)
   if old_lanes[i+dir][px]==SP_EMPTY and lanes[i+dir][px]==SP_EMPTY then lanes[i][j]=SP_EMPTY; lanes[i+dir][px]=v
