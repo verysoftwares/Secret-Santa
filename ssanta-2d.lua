@@ -39,7 +39,7 @@ SP_BOSSL=67
 SP_BOSSR=SP_BOSSL-16
 SP_BOSSGIFTL=SP_BOSSL+1
 SP_BOSSGIFTR=SP_BOSSL+1-16
-SP_GIFT2=SP_GIFT-16
+SP_GIFT2=SP_GIFT-16+1
 
 t=0
 x=96
@@ -719,6 +719,7 @@ function gift_advance(giftshot)
         boss.hp=boss.hp-1
         if boss.hp<=0 then
         table.insert(labels,{x=giftshot.x,y=giftshot.y,id=step,count=0,t=t})
+        lanes[giftshot.y][giftshot.x]=SP_EMPTY
         else
         table.insert(labels,{x=giftshot.x,y=giftshot.y,id=118+boss.hp-1,count=1,t=t})
         end
