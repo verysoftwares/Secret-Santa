@@ -637,7 +637,11 @@ function elf_walk(v,j,i,old_lanes)
 end
 
 function elf_turn(v,i,j)
-  if v==SP_BOSSL then
+  if v==SP_ELFL then
+  lanes[i][j]=SP_ELFR
+  elseif v==SP_ELFR then
+  lanes[i][j]=SP_ELFL
+  elseif v==SP_BOSSL then
   lanes[i][j]=SP_BOSSR
   elseif v==SP_BOSSR then
   lanes[i][j]=SP_BOSSL
