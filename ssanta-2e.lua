@@ -775,7 +775,9 @@ end
 
 function render_background()
   local bg_cor=coroutine.create(function()
-  cls(0)
+  local bg=0
+  if (lvl-1)%2==1 then bg=1 end
+  cls(bg)
 
   for i=1,4 do
     local ly
