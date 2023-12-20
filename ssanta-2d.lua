@@ -595,8 +595,8 @@ function elf_advance()
         -- you're good to walk forward!
         local intent=math.random(0,6)
         local px
-        if santay<i then intent=0 end
-        if santay>i then intent=1 end
+        if (v==SP_BOSSGIFTL or v==SP_BOSSGIFTR) and santay<i then intent=0 end
+        if (v==SP_BOSSGIFTL or v==SP_BOSSGIFTR) and santay>i then intent=1 end
         if intent==0 then
           -- move further
           if i>1 then
