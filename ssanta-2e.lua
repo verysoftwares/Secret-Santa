@@ -1099,6 +1099,8 @@ function credits()
   if btnp(4) then 
     sfx(2,'A-4',60,0); TIC=cm_unlock
   end
+
+  reset_save()
     
   t=t+1
 end
@@ -1110,6 +1112,7 @@ function cm_unlock()
   local tw=print(msg,0,-6)
   print(msg,240/2-tw/2,136/2-3,11)
   if btnp(4) then reset() end
+  reset_save()
   t=t+1
 end
 
@@ -1193,6 +1196,7 @@ function modal()
   print(string.format('x%X',gift_count()),240/2+2+2+16+2+1,136-8-12-12+2+6,12)
   end
   if btnp(4) then loaded=false; t=-1; tt=0; labels={}; TIC=ssanta end
+  reset_save()
   t=t+1
 end
 
@@ -1277,6 +1281,9 @@ function challenge()
     end
     i=i+1
   end
+  
+  reset_save()
+  
   t4=t4+1
 end
 
