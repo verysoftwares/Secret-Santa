@@ -741,8 +741,12 @@ function gift_advance(giftshot)
     table.insert(labels,{x=giftshot.x,y=giftshot.y,id=SP_SANTA,count=0,t=t})
     sfx(8,'A-3',30,3)  
     giftshot.x=nil; giftshot.y=nil; giftshot.dx=nil
+  elseif is_elf(step) then
+    table.insert(labels,{x=giftshot.x,y=giftshot.y,id=SP_GIFT2,count=0,t=t})
+    giftshot.x=nil; giftshot.y=nil; giftshot.dx=nil
   elseif step~=SP_EMPTY then 
     lanes[giftshot.y][giftshot.x]=SP_EMPTY; 
+    table.insert(labels,{x=giftshot.x,y=giftshot.y,id=SP_GIFT2,count=0,t=t})
     giftshot.x=nil; giftshot.y=nil; giftshot.dx=nil
   elseif step==SP_EMPTY then
     spawn_item(giftshot.x,giftshot.y)
@@ -777,6 +781,7 @@ function render_background()
   local bg_cor=coroutine.create(function()
   local bg=0
   if (lvl-1)%2==1 then bg=1 end
+  if lvl==5 then bg=8 end
   cls(bg)
 
   for i=1,4 do
