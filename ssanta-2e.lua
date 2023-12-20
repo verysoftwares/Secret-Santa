@@ -188,6 +188,13 @@ end
 maxtimer=36
 timer=maxtimer
 
+giftshot={x=nil,y=nil,sp=SP_GIFT,dx=nil}
+bossgiftshot={x=nil,y=nil,sp=SP_GIFT2,dx=nil}
+
+labels={}
+
+lvl=1
+
 function ssanta()
   if lvl<5 then music2()
   else bossmusic() end
@@ -673,8 +680,6 @@ function is_elf(v)
   return v==SP_ELFL or v==SP_ELFR or v==SP_BOSSL or v==SP_BOSSR or v==SP_BOSSGIFTL or v==SP_BOSSGIFTR
 end
 
-giftshot={x=nil,y=nil,sp=SP_GIFT,dx=nil}
-bossgiftshot={x=nil,y=nil,sp=SP_GIFT2,dx=nil}
 function gift_count()
   local out=0
   for i=1,4 do
@@ -768,7 +773,6 @@ function spawn_item(sx,sy)
   lanes[sy][sx]=item
 end
 
-labels={}
 function add_pack(i,n)
   pack[i]=pack[i]+n
   if n>0 then
@@ -1056,7 +1060,6 @@ function credits()
     
   t=t+1
 end
---TIC=credits
 
 function cm_unlock()
   cls(8)
@@ -1068,7 +1071,6 @@ function cm_unlock()
   t=t+1
 end
 
-lvl=1
 function modal()
   cls(1)
   
@@ -1147,14 +1149,13 @@ function modal()
   print(string.format('x%X',elf_count()),240/2-20*2+2+16+2+1,136-8-12-12+2+6,12)
   print(string.format('x%X',gift_count()),240/2+2+2+16+2+1,136-8-12-12+2+6,12)
   end
+
   if btnp(4) then loaded=false; t=-1; tt=0; rt=0; labels={}; TIC=ssanta end
+
   reset_save()
+
   t=t+1
 end
-
-records={
-}
-for i=1,5 do records[i]=pmem(255-(i)) end
 
 cha=1
 t4=0
@@ -1221,8 +1222,6 @@ function challenge()
     --end
   end
   
-  if btnp(4) or (t>0 and keyp(50)) then lvl=cha; generate(); t=0; tt=0; rt=0; loaded=false; labels={}; TIC=ssanta; t4=-1 end
-
   end)
 
   local i=0
@@ -1234,6 +1233,8 @@ function challenge()
     i=i+1
   end
   
+  if btnp(4) or (t>0 and keyp(50)) then lvl=cha; generate(); t=0; tt=0; rt=0; loaded=false; labels={}; TIC=ssanta; t4=-1 end
+
   reset_save()
   
   t4=t4+1
@@ -1264,6 +1265,10 @@ end
     if(c0==nil and c1==nil)then for i=0,15 do poke4(0x3FF0*2+i,i) end
     else poke4(0x3FF0*2+c0,c1) end
   end
+
+records={
+}
+for i=1,5 do records[i]=pmem(255-(i)) end
 
 if pmem(99)>0 then
   lvl=pmem(99)
