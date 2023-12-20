@@ -760,10 +760,10 @@ end
 function spawn_item(sx,sy)
   local rng=math.random(1,10)
   local item=0
-  if rng>=7 then item=88
-  elseif rng>=4 then item=89
-  elseif rng>=2 then item=87
-  else item=86 end
+  if rng>=7 then item=SP_CANE
+  elseif rng>=4 then item=SP_TREE
+  elseif rng>=2 then item=SP_SOCK
+  else item=SP_GIFT end
   lanes[sy][sx]=item
 end
 
