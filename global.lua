@@ -25,7 +25,7 @@ t3=0
 function infotext(msg)
   if msg~='Game over' and string.sub(msg,1,13)~='No elves left' then sfx(3,'A-6',30,2) end
   return function() 
-    if msg~='Game over' and string.sub(msg,1,13)~='No elves left' then music2() end
+    if msg~='Game over' and string.sub(msg,1,13)~='No elves left' then gamemusic() end
     
     local tw=print(msg,0,-6)
     print(msg,240/2-tw/2,136/2-3-8,2+t3*0.06%6)
