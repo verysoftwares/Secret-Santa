@@ -47,7 +47,7 @@ function gift_advance(giftshot)
       lanes[giftshot.y][giftshot.x]=SP_EMPTY; 
     end
     if (not elf) or (not hit) then
-    table.insert(labels,{x=giftshot.x,y=giftshot.y,id=SP_GIFT,count=0,t=t})
+    table.insert(labels,{x=giftshot.x,y=giftshot.y,id=giftshot.sp,count=0,t=t})
     giftshot.x=nil; giftshot.y=nil; giftshot.dx=nil
     end
   elseif step==SP_EMPTY then 
@@ -60,11 +60,11 @@ function gift_advance(giftshot)
     sfx(8,'A-3',30,3)  
     giftshot.x=nil; giftshot.y=nil; giftshot.dx=nil
   elseif is_elf(step) then
-    table.insert(labels,{x=giftshot.x,y=giftshot.y,id=SP_GIFT2,count=0,t=t})
+    table.insert(labels,{x=giftshot.x,y=giftshot.y,id=giftshot.sp,count=0,t=t})
     giftshot.x=nil; giftshot.y=nil; giftshot.dx=nil
   elseif step~=SP_EMPTY then 
     lanes[giftshot.y][giftshot.x]=SP_EMPTY; 
-    table.insert(labels,{x=giftshot.x,y=giftshot.y,id=SP_GIFT2,count=0,t=t})
+    table.insert(labels,{x=giftshot.x,y=giftshot.y,id=giftshot.sp,count=0,t=t})
     giftshot.x=nil; giftshot.y=nil; giftshot.dx=nil
   elseif step==SP_EMPTY then
     spawn_item(giftshot.x,giftshot.y)
