@@ -1,6 +1,6 @@
 function credits()
   cls(0)
-  music3()
+  loadermusic()
 
   local pos={}    
   for sp=SP_GIFT,SP_TREE do

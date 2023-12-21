@@ -14,7 +14,7 @@ t4=0
 function challenge()
   local cha_cor= coroutine.create(function()
   cls(8)
-  music4()
+  chmodemusic()
   local msg='-=* Challenge mode *=-'
   local tw=print(msg,0,-6*2,0,false,2,false)
   print(msg,240/2-tw/2-2,4-2,0,false,2,false)

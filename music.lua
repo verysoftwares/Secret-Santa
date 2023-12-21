@@ -8,7 +8,7 @@ function music1()
   end
 end
 
-function music2()
+function gamemusic()
   tt=tt or 0
   rt=rt or 0
   if (rt==0 and tt%18==0) or (tt<18*8*4 and tt%18==0) or (rt==1 and tt>=18*8*4 and tt%12==0) then
@@ -22,7 +22,7 @@ function music2()
   tt=tt+1
 end
 
-function music3()
+function loadermusic()
   tt2=tt2 or 0
   if tt2%4==0 and tt2<4*4*8-4*2 then
     sfx(1,12*3+tt2%15,6,0)
@@ -37,7 +37,7 @@ function music3()
   tt2=tt2+1
 end
 
-function music4()
+function chmodemusic()
   tt3=tt3 or 0
   rt3=rt3 or 1
   if (tt3<90 and tt3%1==0) or (tt3>=90 and tt3%9==0) then

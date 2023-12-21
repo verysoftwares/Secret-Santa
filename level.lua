@@ -151,7 +151,7 @@ function modal()
   cls(1)
   
   if t>=12*7 then
-  music3()
+  loadermusic()
   else
   if t%12==0 and t>0 then 
     local note='A-4'
