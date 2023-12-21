@@ -72,8 +72,7 @@ function challenge()
     print(string.format('x%X',gift_count()),40+tw+8+18*2+4+1+20+offx,24+(i-1)*24+1+6-4-1+offy,12)
     coroutine.yield()
     --end
-  end
-  
+  end  
   end)
 
   local i=0
