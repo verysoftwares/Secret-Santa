@@ -143,7 +143,7 @@ function nextlevel()
     else
     generate(); TIC=modal; t=-1; tt2=0
     end
-  else TIC=challenge; t=-1; tt2=0; tt3=0; return end
+  else TIC=challenge; t=-1; tt2=0; tt3=0; rt3=1; return end
 end
 
 -- an update function for level transitions
