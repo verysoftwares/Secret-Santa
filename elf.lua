@@ -1,5 +1,7 @@
 bossgiftshot={x=nil,y=nil,sp=SP_GIFT2,dx=nil}
 
+-- if set to true, makes it so that time pauses
+-- during elf turn to animate each elf individually.
 elf_load=false
 
 function elf_advance()
