@@ -1,6 +1,7 @@
 t2=0
 function advance_timer()
-  reset_save()
+  global_timer_events()
+  
   if not loaded then return end
     
   timer=timer-1
@@ -29,8 +30,6 @@ function advance_timer()
   end
 
   if timer<8 then hilightx=nil; hilighty=nil end
-  
-  global_timer_events()
   
   t2=t2+1
 end
@@ -84,4 +83,6 @@ function global_timer_events()
       end
     end
   end
+
+  reset_save()
 end
