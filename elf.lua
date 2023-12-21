@@ -7,7 +7,7 @@ function elf_advance()
   local old_lanes={{},{},{},{}}
   for i=1,4 do
     for j,v in ipairs(lanes[i]) do
-      if i==santay and j==santax then old_lanes[i][j]=97 
+      if i==santay and j==santax then old_lanes[i][j]=SP_SANTA 
       else old_lanes[i][j]=v end
     end
   end
