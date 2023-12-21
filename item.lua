@@ -3,20 +3,6 @@ for i=SP_SOCK,SP_TREE do
   pack[i]=4
 end
 
-function gift_count()
-  local out=0
-  for i=1,4 do
-    for j,v in ipairs(lanes[i]) do
-      if v==SP_GIFT then out=out+1 end
-      if v==SP_BOSSGIFTR or v==SP_BOSSGIFTL then out=out+1 end
-    end
-  end
-  if gift then out=out+gift end
-  if giftshot.x then out=out+1 end
-  if bossgiftshot.x then out=out+1 end
-  return out
-end
-
 function gift_advance(giftshot)
   giftshot.x=giftshot.x+giftshot.dx; 
   sfx(5,'D-4',30,3)
@@ -84,6 +70,20 @@ function gift_advance(giftshot)
     spawn_item(giftshot.x,giftshot.y)
   end
   end
+end
+
+function gift_count()
+  local out=0
+  for i=1,4 do
+    for j,v in ipairs(lanes[i]) do
+      if v==SP_GIFT then out=out+1 end
+      if v==SP_BOSSGIFTR or v==SP_BOSSGIFTL then out=out+1 end
+    end
+  end
+  if gift then out=out+gift end
+  if giftshot.x then out=out+1 end
+  if bossgiftshot.x then out=out+1 end
+  return out
 end
 
 function spawn_item(sx,sy)
