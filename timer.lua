@@ -1,4 +1,4 @@
---t2=0
+t2=0
 function advance_timer()
   reset_save()
   if not loaded then return end
@@ -6,21 +6,24 @@ function advance_timer()
   timer=timer-1
 
   if timer<=0 then
-    --if timer==0 then elf_cor=elf_advance() end
-    --timer=0
-    --if t2%8==0 and not coroutine.resume(elf_cor) then
-    --timer=maxtimer 
-    --santa_advance()
-    --elf_cor=nil
-    --end
-    santa_advance()
-    elf_cor=elf_advance()
-    while coroutine.resume(elf_cor) do end
-    timer=maxtimer
-    elf_cor=nil
+    if elf_load then
+      if timer==0 then elf_cor=elf_advance() end
+      timer=0
+      if t2%8==0 and not coroutine.resume(elf_cor) then
+      timer=maxtimer 
+      santa_advance()
+      elf_cor=nil
+      end
+    else
+      santa_advance()
+      elf_cor=elf_advance()
+      while coroutine.resume(elf_cor) do end
+      timer=maxtimer
+      elf_cor=nil
+    end
   end
 
-  if t%6==0 then
+  if t%6==0 and not (elf_load and elf_cor) then
     if giftshot.x then gift_advance(giftshot) end
     if bossgiftshot.x then gift_advance(bossgiftshot) end
   end
@@ -29,7 +32,7 @@ function advance_timer()
   
   global_timer_events()
   
-  --t2=t2+1
+  t2=t2+1
 end
 
 function global_timer_events()

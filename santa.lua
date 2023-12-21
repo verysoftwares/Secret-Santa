@@ -5,8 +5,10 @@ santas=3
 giftshot={x=nil,y=nil,sp=SP_GIFT,dx=nil}
 
 function santa_input()
+  if elf_load and elf_cor then return end
   if fail then return end
   if not loaded then return end
+  
   -- up to go further into the parallax
   if btnp(0) and santay>1 then
     local moved=santa_parallax(-1)

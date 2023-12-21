@@ -1,5 +1,7 @@
 bossgiftshot={x=nil,y=nil,sp=SP_GIFT2,dx=nil}
 
+elf_load=true
+
 function elf_advance()
   return coroutine.create(function()
   local old_lanes={{},{},{},{}}

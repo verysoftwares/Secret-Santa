@@ -35,9 +35,9 @@ function ssanta()
   render_background()
   render_foreground()
 
-  --if not elf_cor then
+  if not elf_load or not elf_cor then
   t=t+1
-  --end
+  end
 end
 
 TIC=ssanta
