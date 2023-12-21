@@ -1,3 +1,6 @@
+-- 'pack' has your sock, cane, and tree counts.
+-- you start with 4 of each and can pick up
+-- a maximum of 15.
 pack={}
 for i=SP_SOCK,SP_TREE do
   pack[i]=4
