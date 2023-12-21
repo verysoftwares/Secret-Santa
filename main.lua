@@ -26,7 +26,7 @@ maxtimer=36
 timer=maxtimer
 
 function ssanta()
-  if lvl<5 then music2()
+  if lvl<5 then gamemusic()
   else bossmusic() end
 
   santa_input()
